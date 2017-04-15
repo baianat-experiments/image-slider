@@ -1,0 +1,30 @@
+.cube
+    top: 0
+    left: 0
+    position: absolute
+    height: 100%
+    width: 100%
+    transform-style: preserve-3d
+    transform-origin: center center
+    transition: 0.5s ease
+
+    &-face
+        position: absolute
+        width: 100%
+        height: 100%
+        top: 0
+        left: 0
+        transition: 0.5s
+        background-color: $dark
+        background-position: inherit
+        background-size: inherit
+        background-repeat: no-repeat
+        transform-origin: center center
+
+.animation-3d
+    position: relative
+    display: none
+    width: 100%
+    height: 100%
+    perspective: 1200px
+    perspective-origin: center center
