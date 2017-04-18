@@ -51,7 +51,7 @@ for easy customization you have to add every element you want in slider
     </div>
   ...
 
-  <!-- slider indecators -->
+  <!-- slider indicators -->
     <ul class="femto-dots">
       <li><a class="femto-dot is-active"></a></li>
       <li><a class="femto-dot"></a></li>
@@ -74,15 +74,15 @@ for easy customization you have to add every element you want in slider
     </a>
 </div>
 ```
-not here for next/back arrows you can use any element you wany inside them either ```svg``` icon or ```font``` icon
+not here for next/back arrows you can use any element you want inside them either ```svg``` icon or ```font``` icon
 
 #### Create new slider
 ``` javascript
-new Femto('#femto1', settings);
+new Femto('#femto1');
 ```
 
 #### Settings
-| Property       | default  | values                       |
+| Properties     | default  | values                       |
 | -------------- | -------- | ---------------------------- |
 | slideMode      | fading   | 'fading' 'sliding' 'falling' |
 | playTime       | 5000     | integer time in milliseconds |
@@ -94,10 +94,10 @@ new Femto('#femto1', settings);
 | slicesCount    | 4        | integer number               |
 | events         | null     | object                       |
 
-#### Build your owen custom mode
+#### Build your custom mode
 you can create your custom mode as following
 ``` javascript
-new Femto('#femto1', {slideMode = 'happy'});
+new Femto('#femto1', {slideMode: 'happy'});
 ```
 in css file provide the transform for three states entering, leaving and active
 ``` css
