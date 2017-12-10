@@ -1,21 +1,22 @@
 # Femto
-Lightweight Customizable Slider
-#### Current version: 0.0.1
+
+Lightweight Full Customizable Slider
 
 ## key features
+
 - Lightweight
 - Full Customizable
 - Build with ECMAScript6 classes
 - support videos
 - Custom moods
 - Special 3D plugin
+
 [examples](https://baianat.github.io/femto/)
 
-
-
-
 ## How to use
-#### include necessary files
+
+### include necessary files
+
 ``` html
 <head>
   <link rel="stylesheet" href="dist/css/femto.css">
@@ -26,8 +27,10 @@ Lightweight Customizable Slider
 </body>
 ```
 
-#### HTML markup
+### HTML markup
+
 for easy customization you have to add every element you want in slider
+
 ``` html
 <!-- create div with class femto -->
 <div class="femto" id="femto1">
@@ -73,15 +76,19 @@ for easy customization you have to add every element you want in slider
       </svg>
     </a>
 </div>
-```
+
 not here for next/back arrows you can use any element you want inside them either ```svg``` icon or ```font``` icon
 
-#### Create new slider
+### Create new slider
+
 ``` javascript
+
 new Femto('#femto1');
+
 ```
 
-#### Settings
+### Settings
+
 | Properties     | default  | values                       |
 | -------------- | -------- | ---------------------------- |
 | slideMode      | fading   | 'fading' 'sliding' 'falling' |
@@ -94,13 +101,20 @@ new Femto('#femto1');
 | slicesCount    | 4        | integer number               |
 | events         | null     | object                       |
 
-#### Build your custom mode
+##Build your custom mode
+
 you can create your custom mode as following
+
 ``` javascript
+
 new Femto('#femto1', {slideMode: 'happy'});
+
 ```
+
 in css file provide the transform for three states entering, leaving and active
+
 ``` css
+
 .femto-happy.is-entering {
   transform: translate3d(-100%, 0, 0) rotate(300deg);
 }
@@ -110,20 +124,26 @@ in css file provide the transform for three states entering, leaving and active
 .femto-happy.is-active {
   transform: translate3d(0, 0, 0) rotate(-300deg);
 }
+
 ```
 
-#### Enable 3D mode
+## Enable 3D mode
+
 first you have to include ```cube3D``` plugin after ```femto```
+
 ``` html
+
 <body>
     ...
     <script type="text/javascript" src="dist/js/femto.js"></script>
     <script type="text/javascript" src="dist/js/cube3D.js"></script>
 </body>
+
 ```
 
 then pass the options
 ``` javascript
+
 new Femto('#femto2', {
     autoPlay: false,
     plugin: Cube3D,
@@ -131,7 +151,9 @@ new Femto('#femto2', {
     slicesCount: 6,
     mode3D: 1
 });
+
 ```
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
