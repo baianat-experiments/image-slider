@@ -1,53 +1,66 @@
-# Femto
+# Flow
 
-Lightweight Full Customizable Slider
+Lightweight, fully-customizable image slider
 
 ## key features
 
-- Lightweight
-- Full Customizable
-- Build with ECMAScript6 classes
-- support videos
-- Custom moods
-- Special 3D plugin
+* Lightweight
+* Add your custom transition effects
+* Built with ECMAScript, no jQuery
+* Progress bar for the duration of the image
+* Supports videos
+* Touch friendly
+* Vertical and horizontal sliding modes
+* Special 3D pluin
 
-[examples](https://baianat.github.io/femto/)
+[examples](https://baianat.github.io/flow/)
 
-## How to use
+## Getting started
 
-### include necessary files
+### Install
+
+First step is to install it using yarn or npm
+
+```bash
+npm install @baianat/flow
+
+# or use yarn
+yarn add @baianat/flow
+```
+
+### Include necessary files
 
 ``` html
 <head>
-  <link rel="stylesheet" href="dist/css/femto.css">
+  <link rel="stylesheet" href="dist/css/flow.css">
 </head>
 <body>
     ...
-    <script type="text/javascript" src="dist/js/femto.js"></script>
+    <script type="text/javascript" src="dist/js/flow.js"></script>
 </body>
 ```
 
 ### HTML markup
 
-for easy customization you have to add every element you want in slider
+For easy customization, you have to add any element you want in Flow
 
 ``` html
-<!-- create div with class femto -->
-<div class="femto" id="femto1">
-  <!-- slider loader -->
-  <div class="femto-loader"></div>
-    <!-- add div with femto-slider class for each slide image -->
-    <div class="femto-slide is-active">
-      <!-- slider content -->
-      <img src="dist/img/image-01.jpg" alt="" class="femto-image">
-      <div class="femto-description">
+<!-- create div with class flow -->
+<div class="flow" id="flow1">
+  <!-- flow loader -->
+  <div class="flow-loader"></div>
+    <!-- add div with flow-slider class for each image -->
+    <div class="flow-slide is-active">
+      <!-- flow content -->
+      <img src="dist/img/image-01.jpg" alt="" class="flow-image">
+      <div class="flow-description">
         <h3>Awesome title here</h3>
         <p>Lorem ipsum dolor sit</p>
       </div>
     </div>
-    <div class="femto-slide">
-      <img src="dist/img/image-02.jpg" alt="" class="femto-image">
-      <div class="femto-description">
+    <div class="flow-slide">
+      <img src="dist/img/image-02.jpg" alt="" class="flow-image">
+      <div class="flow-description">
         <h3>Awesome title here</h3>
         <p>Lorem ipsum dolor sit</p>
       </div>
@@ -55,43 +68,44 @@ for easy customization you have to add every element you want in slider
   ...
 
   <!-- slider indicators -->
-    <ul class="femto-dots">
-      <li><a class="femto-dot is-active"></a></li>
-      <li><a class="femto-dot"></a></li>
+    <ul class="flow-dots">
+      <li><a class="flow-dot is-active"></a></li>
+      <li><a class="flow-dot"></a></li>
       ...
 
     </ul>
 
     <!-- slider next arrow -->
-    <a class="femto-next">
+    <a class="flow-next">
       <svg width="50" height="50" viewBox="0 0 24 24">
         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
       </svg>
     </a>
 
     <!-- slider back arrow -->
-    <a class="femto-back">
+    <a class="flow-back">
       <svg width="50" height="50" viewBox="0 0 24 24">
         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
       </svg>
     </a>
 </div>
+```
 
-not here for next/back arrows you can use any element you want inside them either ```svg``` icon or ```font``` icon
+Note: for next/back arrows, you can use any element you want inside them, either an `svg` icon or `font-icon`.
 
-### Create new slider
+### Create a new Flow slider
 
-``` javascript
+```javaScript
 
-new Femto('#femto1');
+new Flow('#flow1');
 
 ```
 
 ### Settings
 
-| Properties     | default  | values                       |
+| VARIABLE     | DEFAULT  | VALUES                       |
 | -------------- | -------- | ---------------------------- |
-| slideMode      | fading   | 'fading' 'sliding' 'falling' |
+| slideMode      | fading   | 'fading', 'sliding', 'falling', or your own custom mode |
 | playTime       | 5000     | integer time in milliseconds |
 | transitionTime | 600      | integer time in milliseconds |
 | autoPlay       | true     | boolean                      |
@@ -103,25 +117,27 @@ new Femto('#femto1');
 
 ##Build your custom mode
 
-you can create your custom mode as following
+You can create your own custom modes. e.g. Create a mode called `happy`
 
-``` javascript
+```javascript
 
-new Femto('#femto1', {slideMode: 'happy'});
+new Flow('#flow1', {
+  slideMode: 'happy'
+});
 
 ```
 
-in css file provide the transform for three states entering, leaving and active
+In your stylesheet file, provide the transition property values for three states; entering, leaving and active
 
-``` css
+```css
 
-.femto-happy.is-entering {
+.flow-happy.is-entering {
   transform: translate3d(-100%, 0, 0) rotate(300deg);
 }
-.femto-happy.is-leaving {
+.flow-happy.is-leaving {
   transform: translate3d(100%, 0, 0) rotate(-300deg);
 }
-.femto-happy.is-active {
+.flow-happy.is-active {
   transform: translate3d(0, 0, 0) rotate(-300deg);
 }
 
@@ -129,22 +145,23 @@ in css file provide the transform for three states entering, leaving and active
 
 ## Enable 3D mode
 
-first you have to include ```cube3D``` plugin after ```femto```
+First, you have to include `cube3D` plugin after `Flow`
 
-``` html
+```html
 
 <body>
     ...
-    <script type="text/javascript" src="dist/js/femto.js"></script>
+    <script type="text/javascript" src="dist/js/flow.js"></script>
     <script type="text/javascript" src="dist/js/cube3D.js"></script>
 </body>
 
 ```
 
-then pass the options
-``` javascript
+then pass the cube3D plugin to `Flow` settings object
 
-new Femto('#femto2', {
+```javaScript
+
+new Flow('#flow2', {
     autoPlay: false,
     plugin: Cube3D,
     active3D: true,
