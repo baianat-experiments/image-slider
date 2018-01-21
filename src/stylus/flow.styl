@@ -1,4 +1,4 @@
-.femto
+.flow
     position: relative
     width: 90%
     height: 500px
@@ -80,7 +80,7 @@
         top: 0
         left: 0
         background-color: alpha($white, 0.9)
-        .femto:hover &
+        .flow:hover &
             opacity: 0
 
     &-next
@@ -121,17 +121,17 @@
  modes
  */
 
-.femto
+.flow
     &-fading
         &.is-entering
         &.is-leaving
             opacity: 0
         &.is-active
             opacity: 1
-            .femto-description
+            .flow-description
                 opacity: 1
                 transform: translate(0, 0)
-        .femto-description
+        .flow-description
             opacity: 0
             transform: translate(0, -100%)
             transform-origin: center top
@@ -159,5 +159,5 @@
 .is-leaving
 .is-active
     display: block
-    .femto-description
+    .flow-description
         transition-delay: 0.6s

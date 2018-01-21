@@ -20,18 +20,18 @@ const reload = browserSync.reload;
 /**
  * scripts functions
  */
- function femto(env) {
+ function flow(env) {
    let gulpTask = gulp.src('./src/js/**/*.js')
      .pipe(plumber())
      .pipe(rollup({
        rollup: require('rollup'),
-       entry: './src/js/femto.js',
+       entry: './src/js/flow.js',
        format: 'umd',
-       moduleName: 'Femto'
+       moduleName: 'flow'
      }))
      .pipe(buble())
      .pipe(rename({
-       basename: "femto",
+       basename: "flow",
        suffix: env === 'production' ? '.min' : '',
        extname: ".js"
       }));
@@ -65,13 +65,13 @@ function cube3d(env) {
  * Scripts task
  */
 gulp.task('scripts', function () {
-  femto();
+  flow();
   cube3d();
 });
 
 gulp.task('production:scripts', function () {
   cube3d('production');
-  femto('production');
+  flow('production');
 });
 
 /**
@@ -83,7 +83,7 @@ gulp.task('styles', function () {
     .pipe(sourcemaps.init())
     .pipe(stylus())
     .pipe(rename({
-        basename: "femto",
+        basename: "flow",
         extname: ".css"
     }))
     .pipe(autoprefixer('last 5 version'))
@@ -101,7 +101,7 @@ gulp.task('production:styles', () => {
       compress: true
     }))
     .pipe(rename({
-      basename: "femto",
+      basename: "flow",
       suffix: ".min",
       extname: ".css"
     }))
@@ -119,7 +119,7 @@ gulp.task('production:styles', () => {
   */
 gulp.task('browser-sync', function () {
     browserSync.init({
-       proxy: "dolober.dev/femto/index.html"
+       proxy: "dolober.dev/flow/index.html"
    });
 })
 

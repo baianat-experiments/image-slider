@@ -1,14 +1,14 @@
 /**
  * core
  */
-.femto {
+.flow {
   position: relative;
   width: 90%;
   height: 500px;
   overflow: hidden;
   margin: 100px 5%;
 }
-.femto-slide {
+.flow-slide {
   position: absolute;
   top: 0;
   left: 0;
@@ -27,12 +27,12 @@
   background-position: center;
   background-size: cover;
 }
-.femto-slide video,
-.femto-slide iframe {
+.flow-slide video,
+.flow-slide iframe {
   width: 100%;
   height: 100%;
 }
-.femto-description {
+.flow-description {
   position: absolute;
   top: 40%;
   left: calc(50% - 200px);
@@ -49,10 +49,10 @@
           user-select: none;
   cursor: default;
 }
-.femto-image {
+.flow-image {
   display: none;
 }
-.femto-dots {
+.flow-dots {
   margin: 0;
   padding: 0;
   position: absolute;
@@ -64,10 +64,10 @@
   z-index: 100;
   list-style: none;
 }
-.femto-dots li:first-child {
+.flow-dots li:first-child {
   margin-left: -50%;
 }
-.is-vertical .femto-dots {
+.is-vertical .flow-dots {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -79,10 +79,10 @@
   top: 40%;
   bottom: auto;
 }
-.is-vertical .femto-dots li:first-child {
+.is-vertical .flow-dots li:first-child {
   margin: 0;
 }
-.femto-dot {
+.flow-dot {
   display: block;
   margin: 10px;
   width: 10px;
@@ -90,10 +90,10 @@
   border-radius: 50%;
   background-color: #fff;
 }
-.femto-dot.is-active {
+.flow-dot.is-active {
   background: #3c83f2;
 }
-.femto-loader {
+.flow-loader {
   position: absolute;
   z-index: 10;
   height: 3px;
@@ -102,11 +102,11 @@
   left: 0;
   background-color: rgba(255,255,255,0.9);
 }
-.femto:hover .femto-loader {
+.flow:hover .flow-loader {
   opacity: 0;
 }
-.femto-next,
-.femto-back {
+.flow-next,
+.flow-back {
   position: absolute;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -124,15 +124,15 @@
   fill: #fff;
   color: #fff;
 }
-.femto-next:hover,
-.femto-back:hover {
+.flow-next:hover,
+.flow-back:hover {
   fill: #3c83f2;
   color: #3c83f2;
 }
-.femto-next {
+.flow-next {
   right: 0;
 }
-.is-vertical .femto-next {
+.is-vertical .flow-next {
   -webkit-transform: rotate(90deg);
       -ms-transform: rotate(90deg);
           transform: rotate(90deg);
@@ -142,10 +142,10 @@
   right: 0;
   bottom: 0;
 }
-.femto-back {
+.flow-back {
   left: 0;
 }
-.is-vertical .femto-back {
+.is-vertical .flow-back {
   -webkit-transform: rotate(90deg);
       -ms-transform: rotate(90deg);
           transform: rotate(90deg);
@@ -153,20 +153,20 @@
   left: auto;
   right: 0;
 }
-.femto-fading.is-entering,
-.femto-fading.is-leaving {
+.flow-fading.is-entering,
+.flow-fading.is-leaving {
   opacity: 0;
 }
-.femto-fading.is-active {
+.flow-fading.is-active {
   opacity: 1;
 }
-.femto-fading.is-active .femto-description {
+.flow-fading.is-active .flow-description {
   opacity: 1;
   -webkit-transform: translate(0, 0);
       -ms-transform: translate(0, 0);
           transform: translate(0, 0);
 }
-.femto-fading .femto-description {
+.flow-fading .flow-description {
   opacity: 0;
   -webkit-transform: translate(0, -100%);
       -ms-transform: translate(0, -100%);
@@ -175,27 +175,27 @@
       -ms-transform-origin: center top;
           transform-origin: center top;
 }
-.femto-sliding.is-entering {
+.flow-sliding.is-entering {
   -webkit-transform: translate3d(-100%, 0, 0);
           transform: translate3d(-100%, 0, 0);
 }
-.femto-sliding.is-leaving {
+.flow-sliding.is-leaving {
   -webkit-transform: translate3d(100%, 0, 0);
           transform: translate3d(100%, 0, 0);
 }
-.femto-sliding.is-active {
+.flow-sliding.is-active {
   -webkit-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
 }
-.femto-falling.is-entering {
+.flow-falling.is-entering {
   -webkit-transform: translate3d(0, -100%, 0);
           transform: translate3d(0, -100%, 0);
 }
-.femto-falling.is-leaving {
+.flow-falling.is-leaving {
   -webkit-transform: translate3d(0, 100%, 0);
           transform: translate3d(0, 100%, 0);
 }
-.femto-falling.is-active {
+.flow-falling.is-active {
   -webkit-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
 }
@@ -204,9 +204,9 @@
 .is-active {
   display: block;
 }
-.is-entering .femto-description,
-.is-leaving .femto-description,
-.is-active .femto-description {
+.is-entering .flow-description,
+.is-leaving .flow-description,
+.is-active .flow-description {
   transition-delay: 0.6s;
 }
 .cube {
@@ -248,4 +248,4 @@
           perspective-origin: center center;
 }
 
-/*# sourceMappingURL=femto.css.map */
+/*# sourceMappingURL=flow.css.map */

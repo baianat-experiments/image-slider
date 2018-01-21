@@ -1,7 +1,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
-	(global.Femto = factory());
+	(global.flow = factory());
 }(this, (function () { 'use strict';
 
 /**
@@ -28,7 +28,7 @@ function callable(func) {
   return typeof func === 'function';
 }
 
-var Femto = function Femto(selector, ref) {
+var Flow = function Flow(selector, ref) {
   if ( ref === void 0 ) ref = {};
   var playTime = ref.playTime; if ( playTime === void 0 ) playTime = 5000;
   var slideMode = ref.slideMode; if ( slideMode === void 0 ) slideMode = 'fading';
@@ -62,20 +62,20 @@ var Femto = function Femto(selector, ref) {
   this.init(this.settings.plugin);
 };
 
-Femto.create = function create (selector, settings) {
-  return new Femto(selector, settings);
+Flow.create = function create (selector, settings) {
+  return new Flow(selector, settings);
 };
 
-Femto.prototype.init = function init (plugin) {
+Flow.prototype.init = function init (plugin) {
     if ( plugin === void 0 ) plugin = null;
 
-  this.slides     = Array.from(this.el.querySelectorAll('.femto-slide'));
-  this.dots       = Array.from(this.el.querySelectorAll('.femto-dot'));
-  this.activeSlide= this.el.querySelector('.femto-slide.is-active');
-  this.activeDot  = this.el.querySelector('.femto-dot.is-active');
-  this.loader     = this.el.querySelector('.femto-loader');
-  this.nextButton = this.el.querySelector('.femto-next');
-  this.backButton = this.el.querySelector('.femto-back');
+  this.slides     = Array.from(this.el.querySelectorAll('.flow-slide'));
+  this.dots       = Array.from(this.el.querySelectorAll('.flow-dot'));
+  this.activeSlide= this.el.querySelector('.flow-slide.is-active');
+  this.activeDot  = this.el.querySelector('.flow-dot.is-active');
+  this.loader     = this.el.querySelector('.flow-loader');
+  this.nextButton = this.el.querySelector('.flow-next');
+  this.backButton = this.el.querySelector('.flow-back');
   this.sliderHeight = this.el.clientHeight;
   this.sliderWidth= this.el.clientWidth;
   this.slidesCount= this.slides.length - 1;
@@ -98,7 +98,7 @@ Femto.prototype.init = function init (plugin) {
   }
 };
 
-Femto.prototype.dotsInit = function dotsInit () {
+Flow.prototype.dotsInit = function dotsInit () {
     var this$1 = this;
 
   this.dots.forEach(function (dot, index) {
@@ -108,7 +108,7 @@ Femto.prototype.dotsInit = function dotsInit () {
   });
 };
 
-Femto.prototype.eventsInit = function eventsInit () {
+Flow.prototype.eventsInit = function eventsInit () {
     var this$1 = this;
 
   if (this.nextButton) {
@@ -125,11 +125,11 @@ Femto.prototype.eventsInit = function eventsInit () {
   }, false);
 };
 
-Femto.prototype.imagesInit = function imagesInit () {
+Flow.prototype.imagesInit = function imagesInit () {
     var this$1 = this;
 
   this.slides.forEach(function (slide, index) {
-    var image = slide.querySelector('.femto-image') || '';
+    var image = slide.querySelector('.flow-image') || '';
     if (image) {
       this$1.imagesSrc.push(image.getAttribute('src'));
     } else {
@@ -139,7 +139,7 @@ Femto.prototype.imagesInit = function imagesInit () {
   });
 };
 
-Femto.prototype.slideNext = function slideNext () {
+Flow.prototype.slideNext = function slideNext () {
   var activeIndex = this.slides.indexOf(this.activeSlide);
   if (activeIndex === this.slidesCount) {
     this.updateSlide(0, true);
@@ -149,7 +149,7 @@ Femto.prototype.slideNext = function slideNext () {
   call(this.settings.events.slideNext);
 };
 
-Femto.prototype.slideBack = function slideBack () {
+Flow.prototype.slideBack = function slideBack () {
   var activeIndex = this.slides.indexOf(this.activeSlide);
   if (activeIndex === 0) {
     this.updateSlide(this.slidesCount, false);
@@ -159,7 +159,7 @@ Femto.prototype.slideBack = function slideBack () {
   call(this.settings.events.slideBack);
 };
 
-Femto.prototype.updateSlide = function updateSlide (slideNumber, forwards) {
+Flow.prototype.updateSlide = function updateSlide (slideNumber, forwards) {
     var this$1 = this;
 
   if (this.updating || slideNumber > this.slidesCount) return;
@@ -205,7 +205,7 @@ Femto.prototype.updateSlide = function updateSlide (slideNumber, forwards) {
   }, this.settings.transitionTime);
 };
 
-Femto.prototype.play = function play () {
+Flow.prototype.play = function play () {
     var this$1 = this;
 
   this.playingInterval = setInterval(function () {
@@ -215,11 +215,11 @@ Femto.prototype.play = function play () {
   }, (1000 / 60));
 };
 
-Femto.prototype.pause = function pause () {
+Flow.prototype.pause = function pause () {
   clearInterval(this.playingInterval);
 };
 
-Femto.prototype.autoPlay = function autoPlay (value) {
+Flow.prototype.autoPlay = function autoPlay (value) {
   if (! value) return;
   this.period = (1000 / 60) / this.settings.playTime;
   this.loading = this.period;
@@ -228,23 +228,23 @@ Femto.prototype.autoPlay = function autoPlay (value) {
   this.el.addEventListener('mouseout', this.play.bind(this), false);
 };
 
-Femto.prototype.slideMode = function slideMode () {
+Flow.prototype.slideMode = function slideMode () {
     var this$1 = this;
 
   if (typeof this.settings.slideMode === 'string') {
     this.slides.forEach(function (slide) {
-      slide.classList.add(("femto-" + (this$1.settings.slideMode)));
+      slide.classList.add(("flow-" + (this$1.settings.slideMode)));
     });
     return;
   }
   this.slides.forEach(function (slide, index) {
     var className = this$1.settings.slideMode[index] || 'fading';
-    slide.classList.add(("femto-" + className));
+    slide.classList.add(("flow-" + className));
   });
 };
 
 // mouse events
-Femto.prototype.pointerDown = function pointerDown () {
+Flow.prototype.pointerDown = function pointerDown () {
   this.sledded = false;
   this.mouseX = event.type === 'mousedown' ? event.clientX : event.touches[0].clientX;
   this.mouseY = event.type === 'mousedown' ? event.clientY : event.touches[0].clientY;
@@ -258,7 +258,7 @@ Femto.prototype.pointerDown = function pointerDown () {
   document.addEventListener('touchend', this.callbacks.onRelease, false);
 };
 
-Femto.prototype.pointerDrag = function pointerDrag () {
+Flow.prototype.pointerDrag = function pointerDrag () {
   // get drag change value
   var eventX = event.type === 'mousemove' ? event.clientX : event.touches[0].clientX;
   var eventY = event.type === 'mousemove' ? event.clientY : event.touches[0].clientY;
@@ -277,13 +277,13 @@ Femto.prototype.pointerDrag = function pointerDrag () {
   }
 };
 
-Femto.prototype.pointerRelease = function pointerRelease () {
+Flow.prototype.pointerRelease = function pointerRelease () {
   document.removeEventListener('mousemove', this.callbacks.onDrag);
   document.removeEventListener('mouseup', this.callbacks.onRelease);
   document.removeEventListener('touchmove', this.callbacks.onDrag);
   document.removeEventListener('touchend',this.callbacks.onRelease);
 };
 
-return Femto;
+return Flow;
 
 })));

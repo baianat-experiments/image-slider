@@ -1,6 +1,6 @@
 import { select, sync, call, callable } from './utilities';
 
-export default class Femto {
+export default class Flow {
 
   constructor(selector, {
     playTime       = 5000,
@@ -36,17 +36,17 @@ export default class Femto {
   }
 
   static create(selector, settings) {
-    return new Femto(selector, settings);
+    return new Flow(selector, settings);
   }
 
   init(plugin = null) {
-    this.slides       = Array.from(this.el.querySelectorAll('.femto-slide'));
-    this.dots         = Array.from(this.el.querySelectorAll('.femto-dot'));
-    this.activeSlide  = this.el.querySelector('.femto-slide.is-active');
-    this.activeDot    = this.el.querySelector('.femto-dot.is-active');
-    this.loader       = this.el.querySelector('.femto-loader');
-    this.nextButton   = this.el.querySelector('.femto-next');
-    this.backButton   = this.el.querySelector('.femto-back');
+    this.slides       = Array.from(this.el.querySelectorAll('.flow-slide'));
+    this.dots         = Array.from(this.el.querySelectorAll('.flow-dot'));
+    this.activeSlide  = this.el.querySelector('.flow-slide.is-active');
+    this.activeDot    = this.el.querySelector('.flow-dot.is-active');
+    this.loader       = this.el.querySelector('.flow-loader');
+    this.nextButton   = this.el.querySelector('.flow-next');
+    this.backButton   = this.el.querySelector('.flow-back');
     this.sliderHeight = this.el.clientHeight;
     this.sliderWidth  = this.el.clientWidth;
     this.slidesCount  = this.slides.length - 1;
@@ -94,7 +94,7 @@ export default class Femto {
 
   imagesInit() {
     this.slides.forEach((slide, index) => {
-      const image = slide.querySelector('.femto-image') || '';
+      const image = slide.querySelector('.flow-image') || '';
       if (image) {
         this.imagesSrc.push(image.getAttribute('src'));
       } else {
@@ -192,13 +192,13 @@ export default class Femto {
   slideMode() {
     if (typeof this.settings.slideMode === 'string') {
       this.slides.forEach((slide) => {
-        slide.classList.add(`femto-${this.settings.slideMode}`);
+        slide.classList.add(`flow-${this.settings.slideMode}`);
       });
       return;
     }
     this.slides.forEach((slide, index) => {
       const className = this.settings.slideMode[index] || 'fading';
-      slide.classList.add(`femto-${className}`);
+      slide.classList.add(`flow-${className}`);
     });
   }
 
