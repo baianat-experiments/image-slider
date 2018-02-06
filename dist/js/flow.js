@@ -69,21 +69,21 @@ Flow.create = function create (selector, settings) {
 Flow.prototype.init = function init (plugin) {
     if ( plugin === void 0 ) plugin = null;
 
-  this.slides     = Array.from(this.el.querySelectorAll('.flow-slide'));
-  this.dots       = Array.from(this.el.querySelectorAll('.flow-dot'));
-  this.activeSlide= this.el.querySelector('.flow-slide.is-active');
-  this.activeDot  = this.el.querySelector('.flow-dot.is-active');
-  this.loader     = this.el.querySelector('.flow-loader');
+  this.slides = Array.from(this.el.querySelectorAll('.flow-slide'));
+  this.activeSlide = this.el.querySelector('.flow-slide.is-active');
+  this.activeIndex = this.slides.indexOf(this.activeSlide);
+  this.loader = this.el.querySelector('.flow-loader');
   this.nextButton = this.el.querySelector('.flow-next');
   this.backButton = this.el.querySelector('.flow-back');
   this.sliderHeight = this.el.clientHeight;
-  this.sliderWidth= this.el.clientWidth;
-  this.slidesCount= this.slides.length - 1;
-  this.updating   = false;
-  this.callbacks  = {};
-  this.imagesSrc  = [];
+  this.sliderWidth = this.el.clientWidth;
+  this.slidesCount = this.slides.length - 1;
+  this.updating = false;
+  this.callbacks = {};
+  this.imagesSrc = [];
+  this.indicators = [];
 
-  this.dotsInit();
+  this.indicatorsInit();
   this.eventsInit();
   this.imagesInit();
   this.slideMode();
@@ -98,14 +98,21 @@ Flow.prototype.init = function init (plugin) {
   }
 };
 
-Flow.prototype.dotsInit = function dotsInit () {
+Flow.prototype.indicatorsInit = function indicatorsInit () {
     var this$1 = this;
 
-  this.dots.forEach(function (dot, index) {
-    dot.addEventListener('click', function () {
-      this$1.updateSlide(index);
-    }, false);
+  var indicatorsList = document.createElement('ul');
+  indicatorsList.classList.add('flow-dots');
+  this.slides.forEach(function (slide, index) {
+    var listItem = document.createElement('li');
+    var indicator = this$1.indicators[index] = document.createElement('a');
+    indicator.classList.add('flow-dot');
+    indicator.classList.toggle('is-active', index === this$1.activeIndex);
+    indicator.addEventListener('click', function () { return this$1.updateSlide(index); });
+    listItem.appendChild(indicator);
+    indicatorsList.appendChild(listItem);
   });
+  this.el.appendChild(indicatorsList);
 };
 
 Flow.prototype.eventsInit = function eventsInit () {
@@ -129,7 +136,7 @@ Flow.prototype.imagesInit = function imagesInit () {
     var this$1 = this;
 
   this.slides.forEach(function (slide, index) {
-    var image = slide.querySelector('.flow-image') || '';
+    var image = slide.querySelector('.flow-image');
     if (image) {
       this$1.imagesSrc.push(image.getAttribute('src'));
     } else {
@@ -140,22 +147,20 @@ Flow.prototype.imagesInit = function imagesInit () {
 };
 
 Flow.prototype.slideNext = function slideNext () {
-  var activeIndex = this.slides.indexOf(this.activeSlide);
-  if (activeIndex === this.slidesCount) {
+  if (this.activeIndex === this.slidesCount) {
     this.updateSlide(0, true);
     return;
   }
-  this.updateSlide(activeIndex + 1, true);
+  this.updateSlide(this.activeIndex + 1, true);
   call(this.settings.events.slideNext);
 };
 
 Flow.prototype.slideBack = function slideBack () {
-  var activeIndex = this.slides.indexOf(this.activeSlide);
-  if (activeIndex === 0) {
+  if (this.activeIndex === 0) {
     this.updateSlide(this.slidesCount, false);
     return;
   }
-  this.updateSlide(activeIndex - 1, false);
+  this.updateSlide(this.activeIndex - 1, false);
   call(this.settings.events.slideBack);
 };
 
@@ -163,10 +168,12 @@ Flow.prototype.updateSlide = function updateSlide (slideNumber, forwards) {
     var this$1 = this;
 
   if (this.updating || slideNumber > this.slidesCount) return;
+  console.log(this.updating);
   if (this.loading) this.loading = 0;
   if (forwards === undefined) forwards = slideNumber > this.slides.indexOf(this.activeSlide);
   this.updating = true;
 
+  console.log(slideNumber, this.activeIndex);
 
   var activeSlide = this.activeSlide;
   var nextSlide = this.slides[slideNumber];
@@ -174,33 +181,43 @@ Flow.prototype.updateSlide = function updateSlide (slideNumber, forwards) {
   var toClass   = forwards ? 'is-leaving' : 'is-entering';
   var activeClass = 'is-active';
 
-  if (this.dots[slideNumber]) {
-    this.activeDot.classList.remove(activeClass);
-    this.dots[slideNumber].classList.add(activeClass);
-    this.activeDot = this.dots[slideNumber];
-  } else if (this.activeDot) {
-    this.activeDot.classList.remove(activeClass);
+  if (this.indicators) {
+    this.indicators[this.activeIndex].classList.remove(activeClass);
+    this.indicators[slideNumber].classList.add(activeClass);
   }
 
+  setTimeout(function () {
+    this$1.loader.style.transition = '';
+    this$1.loader.style.opacity = '';
+    this$1.loader.style.width = '0';
+      
+    this$1.activeSlide = nextSlide;
+    this$1.activeIndex = slideNumber;
+  }, this.settings.transitionTime);
+    
   call(this.settings.events.updating);
+    
+  // if using 3d plugin
   if (this.plugin && callable(this.plugin.updateSlide)) {
     this.plugin.updateSlide(slideNumber);
     return;
   }
-
+    
   activeSlide.classList.add(toClass);
   nextSlide.classList.add(fromClass);
-
+    
   sync(function () {
     activeSlide.classList.remove(activeClass);
     nextSlide.classList.remove(fromClass);
     nextSlide.classList.add(activeClass);
+    this$1.updating = false;
+    this$1.loader.style.transition = (this$1.settings.transitionTime / 1000) + "s";
+    this$1.loader.style.opacity = '0';
+    this$1.loader.style.width = '100%';
   });
 
   setTimeout(function () {
     activeSlide.classList.remove(toClass);
-    this$1.activeSlide = nextSlide;
-    this$1.updating = false;
     call(this$1.settings.events.updated);
   }, this.settings.transitionTime);
 };

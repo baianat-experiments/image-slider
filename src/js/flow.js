@@ -39,21 +39,21 @@ class Flow {
   }
 
   init(plugin = null) {
-    this.slides       = Array.from(this.el.querySelectorAll('.flow-slide'));
-    this.dots         = Array.from(this.el.querySelectorAll('.flow-dot'));
-    this.activeSlide  = this.el.querySelector('.flow-slide.is-active');
-    this.activeDot    = this.el.querySelector('.flow-dot.is-active');
-    this.loader       = this.el.querySelector('.flow-loader');
-    this.nextButton   = this.el.querySelector('.flow-next');
-    this.backButton   = this.el.querySelector('.flow-back');
+    this.slides = Array.from(this.el.querySelectorAll('.flow-slide'));
+    this.activeSlide = this.el.querySelector('.flow-slide.is-active');
+    this.activeIndex = this.slides.indexOf(this.activeSlide);
+    this.loader = this.el.querySelector('.flow-loader');
+    this.nextButton = this.el.querySelector('.flow-next');
+    this.backButton = this.el.querySelector('.flow-back');
     this.sliderHeight = this.el.clientHeight;
-    this.sliderWidth  = this.el.clientWidth;
-    this.slidesCount  = this.slides.length - 1;
-    this.updating     = false;
-    this.callbacks    = {};
-    this.imagesSrc    = [];
+    this.sliderWidth = this.el.clientWidth;
+    this.slidesCount = this.slides.length - 1;
+    this.updating = false;
+    this.callbacks = {};
+    this.imagesSrc = [];
+    this.indicators = [];
 
-    this.dotsInit();
+    this.indicatorsInit();
     this.eventsInit();
     this.imagesInit();
     this.slideMode();
@@ -68,12 +68,19 @@ class Flow {
     }
   }
 
-  dotsInit() {
-    this.dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        this.updateSlide(index);
-      }, false);
-    });
+  indicatorsInit() {
+    const indicatorsList = document.createElement('ul');
+    indicatorsList.classList.add('flow-dots');
+    this.slides.forEach((slide, index) => {
+      const listItem = document.createElement('li');
+      const indicator = this.indicators[index] = document.createElement('a');
+      indicator.classList.add('flow-dot');
+      indicator.classList.toggle('is-active', index === this.activeIndex);
+      indicator.addEventListener('click', () => this.updateSlide(index));
+      listItem.appendChild(indicator);
+      indicatorsList.appendChild(listItem);
+    })
+    this.el.appendChild(indicatorsList);
   }
 
   eventsInit() {
@@ -93,7 +100,7 @@ class Flow {
 
   imagesInit() {
     this.slides.forEach((slide, index) => {
-      const image = slide.querySelector('.flow-image') || '';
+      const image = slide.querySelector('.flow-image');
       if (image) {
         this.imagesSrc.push(image.getAttribute('src'));
       } else {
@@ -104,31 +111,31 @@ class Flow {
   }
 
   slideNext() {
-    const activeIndex = this.slides.indexOf(this.activeSlide);
-    if (activeIndex === this.slidesCount) {
+    if (this.activeIndex === this.slidesCount) {
       this.updateSlide(0, true);
       return;
     }
-    this.updateSlide(activeIndex + 1, true);
+    this.updateSlide(this.activeIndex + 1, true);
     call(this.settings.events.slideNext);
   }
 
   slideBack() {
-    const activeIndex = this.slides.indexOf(this.activeSlide);
-    if (activeIndex === 0) {
+    if (this.activeIndex === 0) {
       this.updateSlide(this.slidesCount, false);
       return;
     }
-    this.updateSlide(activeIndex - 1, false);
+    this.updateSlide(this.activeIndex - 1, false);
     call(this.settings.events.slideBack);
   }
 
   updateSlide(slideNumber, forwards) {
     if (this.updating || slideNumber > this.slidesCount) return;
+    console.log(this.updating);
     if (this.loading) this.loading = 0;
     if (forwards === undefined) forwards = slideNumber > this.slides.indexOf(this.activeSlide);
     this.updating = true;
 
+    console.log(slideNumber, this.activeIndex)
 
     const activeSlide = this.activeSlide;
     const nextSlide   = this.slides[slideNumber];
@@ -136,33 +143,43 @@ class Flow {
     const toClass     = forwards ? 'is-leaving' : 'is-entering';
     const activeClass = 'is-active';
 
-    if (this.dots[slideNumber]) {
-      this.activeDot.classList.remove(activeClass);
-      this.dots[slideNumber].classList.add(activeClass);
-      this.activeDot = this.dots[slideNumber];
-    } else if (this.activeDot) {
-      this.activeDot.classList.remove(activeClass);
+    if (this.indicators) {
+      this.indicators[this.activeIndex].classList.remove(activeClass);
+      this.indicators[slideNumber].classList.add(activeClass);
     }
 
+    setTimeout(() => {
+      this.loader.style.transition = '';
+      this.loader.style.opacity = '';
+      this.loader.style.width = '0';
+      
+      this.activeSlide = nextSlide;
+      this.activeIndex = slideNumber;
+    }, this.settings.transitionTime);
+    
     call(this.settings.events.updating);
+    
+    // if using 3d plugin
     if (this.plugin && callable(this.plugin.updateSlide)) {
       this.plugin.updateSlide(slideNumber);
       return;
     }
-
+    
     activeSlide.classList.add(toClass);
     nextSlide.classList.add(fromClass);
-
+    
     sync(() => {
       activeSlide.classList.remove(activeClass);
       nextSlide.classList.remove(fromClass);
       nextSlide.classList.add(activeClass);
+      this.updating = false;
+      this.loader.style.transition = `${this.settings.transitionTime / 1000}s`;
+      this.loader.style.opacity = '0';
+      this.loader.style.width = '100%';
     });
 
     setTimeout(() => {
       activeSlide.classList.remove(toClass);
-      this.activeSlide = nextSlide;
-      this.updating = false;
       call(this.settings.events.updated);
     }, this.settings.transitionTime);
   }

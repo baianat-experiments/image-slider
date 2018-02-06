@@ -2,8 +2,8 @@ import { css, sync, getRandomInt } from './utilities';
 
 export default class Cube3D {
 
-  constructor(slider, settings) {
-    this.slider = slider;
+  constructor(flow, settings) {
+    this.flow = flow;
     this.settings = settings;
   }
 
@@ -17,9 +17,9 @@ export default class Cube3D {
      </div>`.repeat(this.settings.slicesCount)
     );
     this.fragment.appendChild(cubeContainer);
-    this.slider.el.appendChild(this.fragment);
+    this.flow.el.appendChild(this.fragment);
     this.initMode(this.settings.mode3D);
-    this.slider.slides.forEach((slide) => {
+    this.flow.slides.forEach((slide) => {
       slide.style.backgroundPosition = this.settings.isVertical ? 'left center' : 'center top';
     });
   }
@@ -65,16 +65,16 @@ export default class Cube3D {
   updateSlide(slideNumber) {
     // give cubes style
     const cubes = this.styleCubes(
-      this.slider.imagesSrc[this.slider.slides.indexOf(this.slider.activeSlide)],
-      this.slider.imagesSrc[slideNumber]
+      this.flow.imagesSrc[this.flow.activeIndex],
+      this.flow.imagesSrc[slideNumber]
     );
 
     // start animation
-    const animation = this.slider.el.querySelector('.animation-3d');
+    const animation = this.flow.el.querySelector('.animation-3d');
     animation.style.display = 'block';
-    this.slider.el.style.overflow  = 'visible';
-    this.slider.activeSlide.classList.remove('is-active');
-    this.slider.activeSlide.style.display = 'none';
+    this.flow.el.style.overflow  = 'visible';
+    this.flow.activeSlide.classList.remove('is-active');
+    this.flow.activeSlide.style.display = 'none';
     sync(() => {
       cubes.forEach((cube, index) => {
         setTimeout(() => {
@@ -86,17 +86,17 @@ export default class Cube3D {
     // reset animation
     setTimeout(() => {
       animation.style.display = 'none';
-      this.slider.el.style.overflow = 'hidden';
-      this.slider.slides[slideNumber].style.display = 'block';
-      this.slider.slides[slideNumber].classList.add('is-active');
-      this.slider.activeSlide = this.slider.slides[slideNumber];
-      this.slider.updating = false;
+      this.flow.el.style.overflow = 'hidden';
+      this.flow.slides[slideNumber].style.display = 'block';
+      this.flow.slides[slideNumber].classList.add('is-active');
+      this.flow.activeSlide = this.flow.slides[slideNumber];
+      this.flow.updating = false;
     },(this.settings.slicesCount * 100) + 600);
   }
 
   getCubesModeTransform() {
     const zIndex = this.settings.isVertical ?
-      this.slider.sliderHeight / 2 : (this.slider.sliderHeight / this.settings.slicesCount) / 2;
+      this.flow.sliderHeight / 2 : (this.flow.sliderHeight / this.settings.slicesCount) / 2;
     const rotateAxis = this.settings.rotateAxis.toUpperCase() === 'Y' ? 'Y' : 'X';
     switch (this.settings.rotateDegree) {
     case 90:
@@ -128,36 +128,36 @@ export default class Cube3D {
 
   styleCubes(current, next) {
     const midd         = Math.ceil(this.settings.slicesCount / 2 );
-    const cubes        = Array.from(this.slider.el.querySelectorAll('.cube'));
-    const height       = this.slider.sliderHeight;
-    const width        = this.slider.sliderWidth;
+    const cubes        = Array.from(this.flow.el.querySelectorAll('.cube'));
+    const height       = this.flow.sliderHeight;
+    const width        = this.flow.sliderWidth;
     const slicesCount  = this.settings.slicesCount;
-    const halfHeight   = this.slider.sliderHeight / 2;
-    const widthRatio   = this.slider.sliderWidth / this.settings.slicesCount;
-    const heightRatio  = this.slider.sliderHeight / this.settings.slicesCount;
+    const halfHeight   = this.flow.sliderHeight / 2;
+    const widthRatio   = this.flow.sliderWidth / this.settings.slicesCount;
+    const heightRatio  = this.flow.sliderHeight / this.settings.slicesCount;
 
     // get the image height after it resized to the slider width
     const currentImage = new Image();
     const nextImage    = new Image();
     currentImage.src = current;
     nextImage.src = next;
-    const currentImageHeight = (this.slider.sliderWidth / currentImage.width) * currentImage.height;
-    const nextImageHeight = (this.slider.sliderWidth / nextImage.width) * nextImage.height;
+    const currentImageHeight = (this.flow.sliderWidth / currentImage.width) * currentImage.height;
+    const nextImageHeight = (this.flow.sliderWidth / nextImage.width) * nextImage.height;
 
     // cube faces styling
     let facesStyle = this.settings.isVertical ? [
       {
         transform: `translate3d(0, 0, ${halfHeight}px) rotateY(0)`,
-        backgroundSize: currentImageHeight > this.slider.sliderHeight ? `${100 * slicesCount}% auto` : 'auto 100%',
+        backgroundSize: currentImageHeight > this.flow.sliderHeight ? `${100 * slicesCount}% auto` : 'auto 100%',
       }, {
         transform: 'translate3d(0, -50%, 0) rotateX(90deg)',
-        backgroundSize: nextImageHeight > this.slider.sliderHeight ? `${100 * slicesCount}% auto` : 'auto 100%',
+        backgroundSize: nextImageHeight > this.flow.sliderHeight ? `${100 * slicesCount}% auto` : 'auto 100%',
       }, {
         transform: this.settings.rotateAxis === 'Y' ? `translate3d(0, 0, -${halfHeight}px) scaleX(-1)` : `translate3d(0, 0, -${halfHeight}px) rotateX(180deg)`,
-        backgroundSize: nextImageHeight > this.slider.sliderHeight ? `${100 * slicesCount}% auto` : 'auto 100%',
+        backgroundSize: nextImageHeight > this.flow.sliderHeight ? `${100 * slicesCount}% auto` : 'auto 100%',
       }, {
         transform: 'translate3d(0, 50%, 0) rotateX(90deg)',
-        backgroundSize: nextImageHeight > this.slider.sliderHeight ? `${100 * slicesCount}% auto` : 'auto 100%',
+        backgroundSize: nextImageHeight > this.flow.sliderHeight ? `${100 * slicesCount}% auto` : 'auto 100%',
       }, {
         width: `${height}px`,
         transform: 'translate3d(-50%, 0, 0) rotateY(90deg)'
@@ -168,24 +168,24 @@ export default class Cube3D {
     ] : [
       {
         transform: `translate3d(0, 0, ${heightRatio / 2}px) rotateY(0)`,
-        backgroundSize: currentImageHeight > this.slider.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`,
+        backgroundSize: currentImageHeight > this.flow.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`,
       }, {
         transform: 'translate3d(0, -50%, 0) rotateX(90deg)',
-        backgroundSize: nextImageHeight > this.slider.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`
+        backgroundSize: nextImageHeight > this.flow.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`
       }, {
         transform: this.settings.rotateAxis === 'Y' ? `translate3d(0, 0, -${heightRatio / 2}px) scaleX(-1)` : `translate3d(0, 0, -${heightRatio / 2}px) rotateX(180deg)`,
-        backgroundSize: nextImageHeight > this.slider.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`
+        backgroundSize: nextImageHeight > this.flow.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`
       }, {
         transform: 'translate3d(0, 50%, 0) rotateX(90deg)',
-        backgroundSize: nextImageHeight > this.slider.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`
+        backgroundSize: nextImageHeight > this.flow.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`
       }, {
         width: `${heightRatio}px`,
         transform: 'translate3d(-50%, 0, 0) rotateY(90deg)',
-        backgroundSize: nextImageHeight > this.slider.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`
+        backgroundSize: nextImageHeight > this.flow.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`
       }, {
         width: `${heightRatio}px`,
         transform: `translate3d(calc(${width}px - 50%), 0, 0) rotateY(90deg)`,
-        backgroundSize: nextImageHeight > this.slider.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`
+        backgroundSize: nextImageHeight > this.flow.sliderHeight ? '100% auto' : `auto ${100 * slicesCount}%`
       }
     ];
 
