@@ -27,7 +27,7 @@ const reload = browserSync.reload;
        rollup: require('rollup'),
        entry: './src/js/flow.js',
        format: 'umd',
-       moduleName: 'flow'
+       moduleName: 'Flow'
      }))
      .pipe(buble())
      .pipe(rename({
@@ -119,7 +119,7 @@ gulp.task('production:styles', () => {
   */
 gulp.task('browser-sync', function () {
     browserSync.init({
-       proxy: "dolober.dev/flow/index.html"
+       server: true
    });
 })
 

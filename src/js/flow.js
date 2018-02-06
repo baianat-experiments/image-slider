@@ -1,7 +1,6 @@
 import { select, sync, call, callable } from './utilities';
 
-export default class Flow {
-
+class Flow {
   constructor(selector, {
     playTime       = 5000,
     slideMode      = 'fading',
@@ -243,3 +242,5 @@ export default class Flow {
     document.removeEventListener('touchend',  this.callbacks.onRelease);
   }
 }
+
+export default Flow;

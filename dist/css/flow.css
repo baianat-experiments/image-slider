@@ -3,17 +3,16 @@
  */
 .flow {
   position: relative;
-  width: 90%;
-  height: 500px;
   overflow: hidden;
   margin: 100px 5%;
+  width: 90%;
+  height: 500px;
 }
 .flow-slide {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  display: none;
   -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -21,11 +20,12 @@
       -ms-flex-align: center;
           align-items: center;
   overflow: hidden;
-  display: none;
   overflow: hidden;
-  transition: 0.6s ease-in-out;
+  width: 100%;
+  height: 100%;
   background-position: center;
   background-size: cover;
+  transition: 0.6s ease-in-out;
 }
 .flow-slide video,
 .flow-slide iframe {
@@ -36,48 +36,48 @@
   position: absolute;
   top: 40%;
   left: calc(50% - 200px);
-  width: 400px;
   margin: auto;
+  padding: 10px;
+  width: 400px;
+  color: #fff;
   text-align: center;
   text-shadow: 1px 2px 4px rgba(119,119,119,0.8);
-  color: #fff;
-  padding: 10px;
+  cursor: default;
   transition: 0.6s;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  cursor: default;
 }
 .flow-image {
   display: none;
 }
 .flow-dots {
-  margin: 0;
-  padding: 0;
   position: absolute;
   bottom: 30px;
   left: 50%;
+  z-index: 100;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  z-index: 100;
+  margin: 0;
+  padding: 0;
   list-style: none;
 }
 .flow-dots li:first-child {
   margin-left: -50%;
 }
 .is-vertical .flow-dots {
+  top: 40%;
+  right: 40px;
+  bottom: auto;
+  left: auto;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
-  left: auto;
-  right: 40px;
-  top: 40%;
-  bottom: auto;
 }
 .is-vertical .flow-dots li:first-child {
   margin: 0;
@@ -95,12 +95,12 @@
 }
 .flow-loader {
   position: absolute;
-  z-index: 10;
-  height: 3px;
-  box-shadow: 0 2px 4px -2px rgba(119,119,119,0.9);
   top: 0;
   left: 0;
+  z-index: 10;
+  height: 3px;
   background-color: rgba(255,255,255,0.9);
+  box-shadow: 0 2px 4px -2px rgba(119,119,119,0.9);
 }
 .flow:hover .flow-loader {
   opacity: 0;
@@ -108,6 +108,8 @@
 .flow-next,
 .flow-back {
   position: absolute;
+  top: 0;
+  z-index: 200;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -118,40 +120,50 @@
       -ms-flex-align: center;
           align-items: center;
   padding: 30px;
-  top: 0;
-  z-index: 200;
   height: 100%;
-  fill: #fff;
   color: #fff;
+  fill: #fff;
 }
 .flow-next:hover,
 .flow-back:hover {
-  fill: #3c83f2;
   color: #3c83f2;
+  fill: #3c83f2;
 }
 .flow-next {
   right: 0;
 }
+.flow-next:hover {
+  cursor: e-resize;
+}
 .is-vertical .flow-next {
-  -webkit-transform: rotate(90deg);
-      -ms-transform: rotate(90deg);
-          transform: rotate(90deg);
-  height: auto;
-  left: auto;
   top: auto;
   right: 0;
   bottom: 0;
+  left: auto;
+  height: auto;
+  -webkit-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+.is-vertical .flow-next:hover {
+  cursor: s-resize;
 }
 .flow-back {
   left: 0;
 }
+.flow-back:hover {
+  cursor: w-resize;
+}
 .is-vertical .flow-back {
+  right: 0;
+  left: auto;
+  height: auto;
   -webkit-transform: rotate(90deg);
       -ms-transform: rotate(90deg);
           transform: rotate(90deg);
-  height: auto;
-  left: auto;
-  right: 0;
+}
+.is-vertical .flow-back:hover {
+  cursor: n-resize;
 }
 .flow-fading.is-entering,
 .flow-fading.is-leaving {
