@@ -1,44 +1,21 @@
-import { select, sync, call, callable } from './utilities';
+import { select, sync, call, callable } from './utils';
 
 class Flow {
-  constructor(selector, {
-    playTime       = 5000,
-    slideMode      = 'fading',
-    transitionTime = 600,
-    autoPlay       = true,
-    plugin         = null,
-    active3D       = false,
-    mode3D         = 1,
-    slicesCount    = 4,
-    events         = {
-      // init(){},
-      // slideNext(){},
-      // slideBack(){},
-      // updating(){},
-      // updated(){}
-    }
-  } = {}) {
+  constructor (selector, settings) {
 
-    this.el        = select(selector);
-    this.settings  = {
-      playTime,
-      slideMode,
-      transitionTime,
-      autoPlay,
-      plugin,
-      active3D,
-      slicesCount,
-      mode3D,
-      events,
+    this.el = select(selector);
+    this.settings = {
+      ...Flow.defaults,
+      ...settings
     };
     this.init(this.settings.plugin);
   }
 
-  static create(selector, settings) {
+  static create (selector, settings) {
     return new Flow(selector, settings);
   }
 
-  init(plugin = null) {
+  init (plugin = null) {
     this.slides = Array.from(this.el.querySelectorAll('.flow-slide'));
     this.activeSlide = this.el.querySelector('.flow-slide.is-active');
     this.activeIndex = this.slides.indexOf(this.activeSlide);
@@ -68,7 +45,7 @@ class Flow {
     }
   }
 
-  indicatorsInit() {
+  indicatorsInit () {
     const indicatorsList = document.createElement('ul');
     indicatorsList.classList.add('flow-dots');
     this.slides.forEach((slide, index) => {
@@ -83,22 +60,22 @@ class Flow {
     this.el.appendChild(indicatorsList);
   }
 
-  eventsInit() {
+  eventsInit () {
     if (this.nextButton) {
       this.nextButton.addEventListener('click', this.slideNext.bind(this), false);
     }
     if (this.nextButton) {
       this.backButton.addEventListener('click', this.slideBack.bind(this), false);
     }
-    this.el.addEventListener('mousedown', this.pointerDown.bind(this) ,false);
-    this.el.addEventListener('touchstart', this.pointerDown.bind(this) ,false);
+    this.el.addEventListener('mousedown', this.pointerDown.bind(this), false);
+    this.el.addEventListener('touchstart', this.pointerDown.bind(this), false);
     window.addEventListener('resize', () => {
       this.sliderHeight = this.el.clientHeight;
-      this.sliderWidth  = this.el.clientWidth;
+      this.sliderWidth = this.el.clientWidth;
     }, false);
   }
 
-  imagesInit() {
+  imagesInit () {
     this.slides.forEach((slide, index) => {
       const image = slide.querySelector('.flow-image');
       if (image) {
@@ -110,7 +87,7 @@ class Flow {
     });
   }
 
-  slideNext() {
+  slideNext () {
     if (this.activeIndex === this.slidesCount) {
       this.updateSlide(0, true);
       return;
@@ -119,7 +96,7 @@ class Flow {
     call(this.settings.events.slideNext);
   }
 
-  slideBack() {
+  slideBack () {
     if (this.activeIndex === 0) {
       this.updateSlide(this.slidesCount, false);
       return;
@@ -128,16 +105,16 @@ class Flow {
     call(this.settings.events.slideBack);
   }
 
-  updateSlide(slideNumber, forwards) {
+  updateSlide (slideNumber, forwards) {
     if (this.updating || slideNumber > this.slidesCount) return;
     if (this.loading) this.loading = 0;
     if (forwards === undefined) forwards = slideNumber > this.slides.indexOf(this.activeSlide);
     this.updating = true;
 
     const activeSlide = this.activeSlide;
-    const nextSlide   = this.slides[slideNumber];
-    const fromClass   = forwards ? 'is-entering' : 'is-leaving';
-    const toClass     = forwards ? 'is-leaving' : 'is-entering';
+    const nextSlide = this.slides[slideNumber];
+    const fromClass = forwards ? 'is-entering' : 'is-leaving';
+    const toClass = forwards ? 'is-leaving' : 'is-entering';
     const activeClass = 'is-active';
 
     if (this.indicators) {
@@ -149,22 +126,22 @@ class Flow {
       this.loader.style.transition = '';
       this.loader.style.opacity = '';
       this.loader.style.width = '0';
-      
+
       this.activeSlide = nextSlide;
       this.activeIndex = slideNumber;
     }, this.settings.transitionTime);
-    
+
     call(this.settings.events.updating);
-    
+
     // if using 3d plugin
     if (this.plugin && callable(this.plugin.updateSlide)) {
       this.plugin.updateSlide(slideNumber);
       return;
     }
-    
+
     activeSlide.classList.add(toClass);
     nextSlide.classList.add(fromClass);
-    
+
     sync(() => {
       activeSlide.classList.remove(activeClass);
       nextSlide.classList.remove(fromClass);
@@ -181,20 +158,20 @@ class Flow {
     }, this.settings.transitionTime);
   }
 
-  play() {
+  play () {
     this.playingInterval = setInterval(() => {
       this.loading = this.loading > 1 ? 0 : this.loading + this.period;
       this.loader.style.width = `${this.loading * 100}%`;
-      if (! this.loading) this.slideNext();
+      if (!this.loading) this.slideNext();
     }, (1000 / 60));
   }
 
-  pause() {
+  pause () {
     clearInterval(this.playingInterval);
   }
 
-  autoPlay(value) {
-    if (! value) return;
+  autoPlay (value) {
+    if (!value) return;
     this.period = (1000 / 60) / this.settings.playTime;
     this.loading = this.period;
     this.play();
@@ -202,7 +179,7 @@ class Flow {
     this.el.addEventListener('mouseout', this.play.bind(this), false);
   }
 
-  slideMode() {
+  slideMode () {
     if (typeof this.settings.slideMode === 'string') {
       this.slides.forEach((slide) => {
         slide.classList.add(`flow-${this.settings.slideMode}`);
@@ -216,13 +193,13 @@ class Flow {
   }
 
   // mouse events
-  pointerDown() {
+  pointerDown () {
     this.sledded = false;
     this.mouseX = event.type === 'mousedown' ? event.clientX : event.touches[0].clientX;
     this.mouseY = event.type === 'mousedown' ? event.clientY : event.touches[0].clientY;
 
     // add events listener
-    this.callbacks.onDrag    = this.pointerDrag.bind(this);
+    this.callbacks.onDrag = this.pointerDrag.bind(this);
     this.callbacks.onRelease = this.pointerRelease.bind(this);
     document.addEventListener('mousemove', this.callbacks.onDrag, false);
     document.addEventListener('mouseup', this.callbacks.onRelease, false);
@@ -230,12 +207,12 @@ class Flow {
     document.addEventListener('touchend', this.callbacks.onRelease, false);
   }
 
-  pointerDrag() {
+  pointerDrag () {
     // get drag change value
     const eventX = event.type === 'mousemove' ? event.clientX : event.touches[0].clientX;
     const eventY = event.type === 'mousemove' ? event.clientY : event.touches[0].clientY;
-    const dragX  = (eventX - this.mouseX);
-    const dragY  = (eventY - this.mouseY);
+    const dragX = (eventX - this.mouseX);
+    const dragY = (eventY - this.mouseY);
 
     // check if left mouse is clicked
     if (event.buttons !== 1 && event.type === 'mousemove' || this.sledded) return;
@@ -249,11 +226,29 @@ class Flow {
     }
   }
 
-  pointerRelease() {
+  pointerRelease () {
     document.removeEventListener('mousemove', this.callbacks.onDrag);
-    document.removeEventListener('mouseup',   this.callbacks.onRelease);
+    document.removeEventListener('mouseup', this.callbacks.onRelease);
     document.removeEventListener('touchmove', this.callbacks.onDrag);
-    document.removeEventListener('touchend',  this.callbacks.onRelease);
+    document.removeEventListener('touchend', this.callbacks.onRelease);
+  }
+  
+  static defaults = {
+    playTime: 5000,
+    slideMode: 'fading',
+    transitionTime: 600,
+    autoPlay: true,
+    plugin: null,
+    active3D: false,
+    mode3D: 1,
+    slicesCount: 4,
+    events: {
+      // init(){},
+      // slideNext(){},
+      // slideBack(){},
+      // updating(){},
+      // updated(){}
+    }
   }
 }
 

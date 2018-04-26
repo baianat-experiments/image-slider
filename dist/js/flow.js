@@ -59,48 +59,12 @@
   }();
 
   var Flow = function () {
-    function Flow(selector) {
-      var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref$playTime = _ref.playTime,
-          playTime = _ref$playTime === undefined ? 5000 : _ref$playTime,
-          _ref$slideMode = _ref.slideMode,
-          slideMode = _ref$slideMode === undefined ? 'fading' : _ref$slideMode,
-          _ref$transitionTime = _ref.transitionTime,
-          transitionTime = _ref$transitionTime === undefined ? 600 : _ref$transitionTime,
-          _ref$autoPlay = _ref.autoPlay,
-          autoPlay = _ref$autoPlay === undefined ? true : _ref$autoPlay,
-          _ref$plugin = _ref.plugin,
-          plugin = _ref$plugin === undefined ? null : _ref$plugin,
-          _ref$active3D = _ref.active3D,
-          active3D = _ref$active3D === undefined ? false : _ref$active3D,
-          _ref$mode3D = _ref.mode3D,
-          mode3D = _ref$mode3D === undefined ? 1 : _ref$mode3D,
-          _ref$slicesCount = _ref.slicesCount,
-          slicesCount = _ref$slicesCount === undefined ? 4 : _ref$slicesCount,
-          _ref$events = _ref.events,
-          events = _ref$events === undefined ? {
-        // init(){},
-        // slideNext(){},
-        // slideBack(){},
-        // updating(){},
-        // updated(){}
-      } : _ref$events;
-
+    function Flow(selector, settings) {
       classCallCheck(this, Flow);
 
 
       this.el = select(selector);
-      this.settings = {
-        playTime: playTime,
-        slideMode: slideMode,
-        transitionTime: transitionTime,
-        autoPlay: autoPlay,
-        plugin: plugin,
-        active3D: active3D,
-        slicesCount: slicesCount,
-        mode3D: mode3D,
-        events: events
-      };
+      this.settings = Object.assign({}, Flow.defaults, settings);
       this.init(this.settings.plugin);
     }
 
@@ -362,6 +326,24 @@
     }]);
     return Flow;
   }();
+
+  Flow.defaults = {
+    playTime: 5000,
+    slideMode: 'fading',
+    transitionTime: 600,
+    autoPlay: true,
+    plugin: null,
+    active3D: false,
+    mode3D: 1,
+    slicesCount: 4,
+    events: {
+      // init(){},
+      // slideNext(){},
+      // slideBack(){},
+      // updating(){},
+      // updated(){}
+    }
+  };
 
   return Flow;
 
