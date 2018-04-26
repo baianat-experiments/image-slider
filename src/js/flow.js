@@ -130,12 +130,9 @@ class Flow {
 
   updateSlide(slideNumber, forwards) {
     if (this.updating || slideNumber > this.slidesCount) return;
-    console.log(this.updating);
     if (this.loading) this.loading = 0;
     if (forwards === undefined) forwards = slideNumber > this.slides.indexOf(this.activeSlide);
     this.updating = true;
-
-    console.log(slideNumber, this.activeIndex)
 
     const activeSlide = this.activeSlide;
     const nextSlide   = this.slides[slideNumber];

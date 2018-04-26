@@ -1,4 +1,4 @@
-import { css, sync, getRandomInt } from './utilities';
+import { css, sync, getRandomInt } from '../utilities';
 
 export default class Cube3D {
 

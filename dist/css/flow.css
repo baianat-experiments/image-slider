@@ -13,10 +13,10 @@
   top: 0;
   left: 0;
   display: none;
-  -webkit-justify-content: center;
+  -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  -webkit-align-items: center;
+  -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   overflow: hidden;
@@ -25,6 +25,8 @@
   height: 100%;
   background-position: center;
   background-size: cover;
+  -webkit-transition: 0.6s ease-in-out;
+  -o-transition: 0.6s ease-in-out;
   transition: 0.6s ease-in-out;
 }
 .flow-slide video,
@@ -43,6 +45,8 @@
   text-align: center;
   text-shadow: 1px 2px 4px rgba(119,119,119,0.8);
   cursor: default;
+  -webkit-transition: 0.6s;
+  -o-transition: 0.6s;
   transition: 0.6s;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -57,7 +61,7 @@
   bottom: 30px;
   left: 50%;
   z-index: 100;
-  display: -webkit-flex;
+  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   margin: 0;
@@ -72,10 +76,11 @@
   right: 40px;
   bottom: auto;
   left: auto;
-  display: -webkit-flex;
+  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
 }
@@ -100,20 +105,21 @@
   z-index: 10;
   height: 3px;
   background-color: rgba(255,255,255,0.9);
-  box-shadow: 0 2px 4px -2px rgba(119,119,119,0.9);
+  -webkit-box-shadow: 0 2px 4px -2px rgba(119,119,119,0.9);
+          box-shadow: 0 2px 4px -2px rgba(119,119,119,0.9);
 }
 .flow-next,
 .flow-back {
   position: absolute;
   top: 0;
   z-index: 200;
-  display: -webkit-flex;
+  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-justify-content: center;
+  -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  -webkit-align-items: center;
+  -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   padding: 30px;
@@ -216,45 +222,7 @@
 .is-entering .flow-description,
 .is-leaving .flow-description,
 .is-active .flow-description {
-  transition-delay: 0.6s;
+  -webkit-transition-delay: 0.6s;
+       -o-transition-delay: 0.6s;
+          transition-delay: 0.6s;
 }
-.cube {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transition: 0.6s ease;
-  -webkit-transform-origin: center center;
-      -ms-transform-origin: center center;
-          transform-origin: center center;
-  -webkit-transform-style: preserve-3d;
-          transform-style: preserve-3d;
-}
-.cube-face {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #777;
-  background-position: inherit;
-  background-size: inherit;
-  background-repeat: no-repeat;
-  transition: 0.6s;
-  -webkit-transform-origin: center center;
-      -ms-transform-origin: center center;
-          transform-origin: center center;
-}
-.animation-3d {
-  position: relative;
-  display: none;
-  width: 100%;
-  height: 100%;
-  -webkit-perspective: 1200px;
-          perspective: 1200px;
-  -webkit-perspective-origin: center center;
-          perspective-origin: center center;
-}
-
-/*# sourceMappingURL=flow.css.map */
