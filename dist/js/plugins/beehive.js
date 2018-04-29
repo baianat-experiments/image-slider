@@ -9,6 +9,15 @@
   (global.Beehive = factory());
 }(this, (function () { 'use strict';
 
+  /**
+   * Utilities
+   */
+  function sync(callback) {
+    setTimeout(function () {
+      return callback();
+    }, 1000 / 60);
+  }
+
   var classCallCheck = function (instance, Constructor) {
     if (!(instance instanceof Constructor)) {
       throw new TypeError("Cannot call a class as a function");
@@ -38,7 +47,7 @@
       classCallCheck(this, Beehive);
 
       this.flow = flow;
-      this.settings = settings;
+      this.settings = Object.assign({}, Beehive.defaults, settings);
     }
 
     createClass(Beehive, [{
@@ -46,7 +55,7 @@
       value: function init() {
         this.beehive = document.createElement('div');
         var fragment = document.createDocumentFragment();
-        var radius = 200;
+        var radius = this.settings.radius;
         var xShift = radius + radius / 2;
         var yShift = radius / 2;
         var cellPerWidth = Math.round(this.flow.sliderWidth / (radius * 1.5) + 1);
@@ -76,12 +85,12 @@
         this.flow.activeSlide.classList.remove('is-active');
         this.flow.slides[slideNumber].classList.add('is-active');
         this.beehive.classList.add('is-active');
-        this.flow.updating = true;
-        window.requestAnimationFrame(function () {
+        var lastCell = this.cells[this.cells.length - 1];
+
+        sync(function () {
           _this.cells.forEach(function (cell) {
             cell.classList.add('is-hidden');
           });
-          var lastCell = _this.cells[_this.cells.length - 1];
           var transitionEndCallback = function transitionEndCallback() {
             _this.flow.activeSlide = _this.flow.slides[slideNumber];
             _this.flow.updating = false;
@@ -91,6 +100,7 @@
           };
           lastCell.addEventListener('transitionend', transitionEndCallback);
         });
+        lastCell.dispatchEvent(new Event('transitionend'));
       }
     }, {
       key: 'updateBackground',
@@ -101,9 +111,16 @@
           cell.classList.remove('is-hidden');
         });
       }
+
+      // eslint-disable-next-line
+
     }]);
     return Beehive;
   }();
+
+  Beehive.defaults = {
+    radius: 200
+  };
 
   return Beehive;
 

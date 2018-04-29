@@ -1,13 +1,18 @@
+import { sync } from '../utils';
+
 export default class Beehive {
   constructor (flow, settings) {
     this.flow = flow;
-    this.settings = settings;
+    this.settings = {
+      ...Beehive.defaults,
+      ...settings
+    }
   }
 
   init () {
     this.beehive = document.createElement('div');
     const fragment = document.createDocumentFragment();
-    const radius = 200;
+    const radius = this.settings.radius;
     const xShift = radius + radius / 2;
     const yShift = radius / 2;
     const cellPerWidth = Math.round(this.flow.sliderWidth / (radius * 1.5) + 1);
@@ -43,12 +48,12 @@ export default class Beehive {
     this.flow.activeSlide.classList.remove('is-active');
     this.flow.slides[slideNumber].classList.add('is-active');
     this.beehive.classList.add('is-active');
-    this.flow.updating = true;
-    window.requestAnimationFrame(() => {
+    const lastCell = this.cells[this.cells.length - 1];
+    
+    sync(() => {
       this.cells.forEach(cell => {
         cell.classList.add('is-hidden');
       });
-      const lastCell = this.cells[this.cells.length - 1];
       const transitionEndCallback = () => {
         this.flow.activeSlide = this.flow.slides[slideNumber];
         this.flow.updating = false;
@@ -58,6 +63,7 @@ export default class Beehive {
       };
       lastCell.addEventListener('transitionend', transitionEndCallback);
     });
+    lastCell.dispatchEvent(new Event('transitionend'));
   }
 
   updateBackground () {
@@ -66,5 +72,10 @@ export default class Beehive {
       cell.style.backgroundImage = `url(${currentImage})`;
       cell.classList.remove('is-hidden');
     });
+  }
+
+  // eslint-disable-next-line
+  static defaults = {
+    radius: 200
   }
 }

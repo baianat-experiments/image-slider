@@ -27,20 +27,20 @@ var createClass = function () {
   };
 }();
 
-var beehive = function () {
-  function beehive(flow, settings) {
-    classCallCheck(this, beehive);
+var Beehive = function () {
+  function Beehive(flow, settings) {
+    classCallCheck(this, Beehive);
 
     this.flow = flow;
-    this.settings = settings;
+    this.settings = Object.assign({}, Beehive.defaults, settings);
   }
 
-  createClass(beehive, [{
+  createClass(Beehive, [{
     key: 'init',
     value: function init() {
       this.beehive = document.createElement('div');
       var fragment = document.createDocumentFragment();
-      var radius = 200;
+      var radius = this.settings.radius;
       var xShift = radius + radius / 2;
       var yShift = radius / 2;
       var cellPerWidth = Math.round(this.flow.sliderWidth / (radius * 1.5) + 1);
@@ -96,7 +96,11 @@ var beehive = function () {
       });
     }
   }]);
-  return beehive;
+  return Beehive;
 }();
 
-export default beehive;
+Beehive.defaults = {
+  radius: 200
+};
+
+export default Beehive;

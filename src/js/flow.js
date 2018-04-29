@@ -106,9 +106,15 @@ class Flow {
   }
 
   updateSlide (slideNumber, forwards) {
-    if (this.updating || slideNumber > this.slidesCount) return;
-    if (this.loading) this.loading = 0;
-    if (forwards === undefined) forwards = slideNumber > this.slides.indexOf(this.activeSlide);
+    if (this.updating || slideNumber > this.slidesCount) {
+      return;
+    }
+    if (this.loading) {
+      this.loading = 0;
+    }
+    if (forwards === undefined) {
+      forwards = slideNumber > this.slides.indexOf(this.activeSlide);
+    }
     this.updating = true;
 
     const activeSlide = this.activeSlide;
@@ -133,7 +139,7 @@ class Flow {
 
     call(this.settings.events.updating);
 
-    // if using 3d plugin
+    // if using a plugin
     if (this.plugin && callable(this.plugin.updateSlide)) {
       this.plugin.updateSlide(slideNumber);
       return;
@@ -233,6 +239,7 @@ class Flow {
     document.removeEventListener('touchend', this.callbacks.onRelease);
   }
   
+  // eslint-disable-next-line
   static defaults = {
     playTime: 5000,
     slideMode: 'fading',

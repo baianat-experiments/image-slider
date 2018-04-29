@@ -179,9 +179,15 @@
       value: function updateSlide(slideNumber, forwards) {
         var _this4 = this;
 
-        if (this.updating || slideNumber > this.slidesCount) return;
-        if (this.loading) this.loading = 0;
-        if (forwards === undefined) forwards = slideNumber > this.slides.indexOf(this.activeSlide);
+        if (this.updating || slideNumber > this.slidesCount) {
+          return;
+        }
+        if (this.loading) {
+          this.loading = 0;
+        }
+        if (forwards === undefined) {
+          forwards = slideNumber > this.slides.indexOf(this.activeSlide);
+        }
         this.updating = true;
 
         var activeSlide = this.activeSlide;
@@ -206,7 +212,7 @@
 
         call(this.settings.events.updating);
 
-        // if using 3d plugin
+        // if using a plugin
         if (this.plugin && callable(this.plugin.updateSlide)) {
           this.plugin.updateSlide(slideNumber);
           return;
@@ -318,6 +324,9 @@
         document.removeEventListener('touchmove', this.callbacks.onDrag);
         document.removeEventListener('touchend', this.callbacks.onRelease);
       }
+
+      // eslint-disable-next-line
+
     }], [{
       key: 'create',
       value: function create(selector, settings) {
