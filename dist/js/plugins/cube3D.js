@@ -18,9 +18,7 @@
     });
   }
   function sync(callback) {
-    setTimeout(function () {
-      return callback();
-    }, 1000 / 60);
+    setTimeout(callback, 16);
   }
 
   function getRandomInt(min, max) {

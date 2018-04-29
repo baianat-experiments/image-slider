@@ -13,9 +13,7 @@
    * Utilities
    */
   function sync(callback) {
-    setTimeout(function () {
-      return callback();
-    }, 1000 / 60);
+    setTimeout(callback, 16);
   }
 
   var classCallCheck = function (instance, Constructor) {
@@ -70,7 +68,7 @@
           var y = Math.floor(i / cellPerWidth);
           var deltaX = x * xShift;
           var deltaY = y * yShift;
-          cell.style.transitionDelay = i * 0.02 + 's';
+          cell.style.transitionDelay = i * 0.01 + 's';
           cell.style.clipPath = 'polygon(\n        ' + deltaX + 'px                    ' + (deltaY + radius * -0.50) + 'px,\n        ' + (deltaX + radius * 0.50) + 'px  ' + (deltaY + radius * -0.50) + 'px,\n        ' + (deltaX + radius * 0.75) + 'px  ' + deltaY + 'px,\n        ' + (deltaX + radius * 0.50) + 'px  ' + (deltaY + radius * 0.50) + 'px,\n        ' + deltaX + 'px                    ' + (deltaY + radius * 0.50) + 'px,\n        ' + (deltaX + radius * -0.25) + 'px ' + deltaY + 'px\n      )';
         });
         fragment.appendChild(this.beehive);
@@ -85,6 +83,8 @@
         this.flow.activeSlide.classList.remove('is-active');
         this.flow.slides[slideNumber].classList.add('is-active');
         this.beehive.classList.add('is-active');
+        this.flow.el.style.overflow = 'visible';
+
         var lastCell = this.cells[this.cells.length - 1];
 
         sync(function () {
@@ -94,13 +94,13 @@
           var transitionEndCallback = function transitionEndCallback() {
             _this.flow.activeSlide = _this.flow.slides[slideNumber];
             _this.flow.updating = false;
+            _this.flow.el.style.overflow = '';
             _this.beehive.classList.remove('is-active');
             _this.updateBackground();
             lastCell.removeEventListener('transitionend', transitionEndCallback);
           };
           lastCell.addEventListener('transitionend', transitionEndCallback);
         });
-        lastCell.dispatchEvent(new Event('transitionend'));
       }
     }, {
       key: 'updateBackground',

@@ -29,7 +29,7 @@ export default class Beehive {
       const y = Math.floor(i / cellPerWidth);
       const deltaX = x * xShift;
       const deltaY = y * yShift;
-      cell.style.transitionDelay = `${i * 0.02}s`;
+      cell.style.transitionDelay = `${i * 0.01}s`;
       cell.style.clipPath = `polygon(
         ${deltaX}px                    ${deltaY + (radius * -0.50)}px,
         ${deltaX + (radius * 0.50)}px  ${deltaY + (radius * -0.50)}px,
@@ -48,6 +48,8 @@ export default class Beehive {
     this.flow.activeSlide.classList.remove('is-active');
     this.flow.slides[slideNumber].classList.add('is-active');
     this.beehive.classList.add('is-active');
+    this.flow.el.style.overflow = 'visible';
+  
     const lastCell = this.cells[this.cells.length - 1];
     
     sync(() => {
@@ -57,13 +59,13 @@ export default class Beehive {
       const transitionEndCallback = () => {
         this.flow.activeSlide = this.flow.slides[slideNumber];
         this.flow.updating = false;
+        this.flow.el.style.overflow = '';
         this.beehive.classList.remove('is-active');
         this.updateBackground();
         lastCell.removeEventListener('transitionend', transitionEndCallback);
       };
       lastCell.addEventListener('transitionend', transitionEndCallback);
     });
-    lastCell.dispatchEvent(new Event('transitionend'));
   }
 
   updateBackground () {

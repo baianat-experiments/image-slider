@@ -36,11 +36,14 @@
 }
 .flow-description {
   position: absolute;
-  top: 40%;
-  left: calc(50% - 200px);
-  margin: auto;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+          transform: translate3d(-50%, -50%, 0);
   padding: 10px;
-  width: 400px;
+  width: 100%;
+  max-width: 500px;
   color: #fff;
   text-align: center;
   text-shadow: 1px 2px 4px rgba(119,119,119,0.8);
@@ -52,6 +55,9 @@
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  -webkit-transform-origin: center top;
+      -ms-transform-origin: center top;
+          transform-origin: center top;
 }
 .flow-image {
   display: none;
@@ -102,11 +108,15 @@
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
   z-index: 10;
   height: 3px;
   background-color: rgba(255,255,255,0.9);
   -webkit-box-shadow: 0 2px 4px -2px rgba(119,119,119,0.9);
           box-shadow: 0 2px 4px -2px rgba(119,119,119,0.9);
+  -webkit-transform-origin: left center;
+      -ms-transform-origin: left center;
+          transform-origin: left center;
 }
 .flow-next,
 .flow-back {
@@ -122,6 +132,7 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  cursor: pointer;
   padding: 30px;
   height: 100%;
   color: #fff;
@@ -135,9 +146,6 @@
 .flow-next {
   right: 0;
 }
-.flow-next:hover {
-  cursor: e-resize;
-}
 .is-vertical .flow-next {
   top: auto;
   right: 0;
@@ -148,14 +156,8 @@
       -ms-transform: rotate(90deg);
           transform: rotate(90deg);
 }
-.is-vertical .flow-next:hover {
-  cursor: s-resize;
-}
 .flow-back {
   left: 0;
-}
-.flow-back:hover {
-  cursor: w-resize;
 }
 .is-vertical .flow-back {
   right: 0;
@@ -164,9 +166,6 @@
   -webkit-transform: rotate(90deg);
       -ms-transform: rotate(90deg);
           transform: rotate(90deg);
-}
-.is-vertical .flow-back:hover {
-  cursor: n-resize;
 }
 .flow-fading.is-entering,
 .flow-fading.is-leaving {
@@ -177,18 +176,13 @@
 }
 .flow-fading.is-active .flow-description {
   opacity: 1;
-  -webkit-transform: translate(0, 0);
-      -ms-transform: translate(0, 0);
-          transform: translate(0, 0);
+  -webkit-transform: translate3d(-50%, -50%, 0);
+          transform: translate3d(-50%, -50%, 0);
 }
 .flow-fading .flow-description {
   opacity: 0;
-  -webkit-transform: translate(0, -100%);
-      -ms-transform: translate(0, -100%);
-          transform: translate(0, -100%);
-  -webkit-transform-origin: center top;
-      -ms-transform-origin: center top;
-          transform-origin: center top;
+  -webkit-transform: translate3d(-50%, -100%, 0);
+          transform: translate3d(-50%, -100%, 0);
 }
 .flow-sliding.is-entering {
   -webkit-transform: translate3d(-100%, 0, 0);

@@ -19,7 +19,6 @@ class Flow {
     this.slides = Array.from(this.el.querySelectorAll('.flow-slide'));
     this.activeSlide = this.el.querySelector('.flow-slide.is-active');
     this.activeIndex = this.slides.indexOf(this.activeSlide);
-    this.loader = this.el.querySelector('.flow-loader');
     this.nextButton = this.el.querySelector('.flow-next');
     this.backButton = this.el.querySelector('.flow-back');
     this.sliderHeight = this.el.clientHeight;
@@ -35,7 +34,12 @@ class Flow {
     this.imagesInit();
     this.slideMode();
 
-    this.autoPlay(this.settings.autoPlay);
+    if (this.settings.autoPlay) {
+      this.loader = document.createElement('div');
+      this.loader.classList.add('flow-loader');
+      this.el.appendChild(this.loader);
+      this.autoPlay();
+    }
     call(this.settings.events.init);
     if (plugin) {
       this.plugin = new plugin(this, this.settings);
@@ -129,10 +133,6 @@ class Flow {
     }
 
     setTimeout(() => {
-      this.loader.style.transition = '';
-      this.loader.style.opacity = '';
-      this.loader.style.width = '0';
-
       this.activeSlide = nextSlide;
       this.activeIndex = slideNumber;
     }, this.settings.transitionTime);
@@ -153,9 +153,6 @@ class Flow {
       nextSlide.classList.remove(fromClass);
       nextSlide.classList.add(activeClass);
       this.updating = false;
-      this.loader.style.transition = `${this.settings.transitionTime / 1000}s`;
-      this.loader.style.opacity = '0';
-      this.loader.style.width = '100%';
     });
 
     setTimeout(() => {
@@ -165,21 +162,25 @@ class Flow {
   }
 
   play () {
+    this.period = 16 / this.settings.playTime;
     this.playingInterval = setInterval(() => {
-      this.loading = this.loading > 1 ? 0 : this.loading + this.period;
-      this.loader.style.width = `${this.loading * 100}%`;
-      if (!this.loading) this.slideNext();
-    }, (1000 / 60));
+      if (this.loading >= 1) {
+        this.slideNext();
+        this.loading = 0;
+      }
+      window.requestAnimationFrame(() => {
+        this.loading += this.period;
+        this.loader.style.transform = `scaleX(${this.loading})`;
+      })
+    }, 16);
   }
 
   pause () {
     clearInterval(this.playingInterval);
   }
 
-  autoPlay (value) {
-    if (!value) return;
-    this.period = (1000 / 60) / this.settings.playTime;
-    this.loading = this.period;
+  autoPlay () {
+    this.loading = 0;
     this.play();
     this.el.addEventListener('mouseover', this.pause.bind(this), false);
     this.el.addEventListener('mouseout', this.play.bind(this), false);

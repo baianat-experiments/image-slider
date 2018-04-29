@@ -13,9 +13,7 @@ function select(element) {
   return element;
 }
 function sync(callback) {
-  setTimeout(function () {
-    return callback();
-  }, 1000 / 60);
+  setTimeout(callback, 16);
 }
 
 function call(func) {
@@ -70,7 +68,6 @@ var Flow = function () {
       this.slides = Array.from(this.el.querySelectorAll('.flow-slide'));
       this.activeSlide = this.el.querySelector('.flow-slide.is-active');
       this.activeIndex = this.slides.indexOf(this.activeSlide);
-      this.loader = this.el.querySelector('.flow-loader');
       this.nextButton = this.el.querySelector('.flow-next');
       this.backButton = this.el.querySelector('.flow-back');
       this.sliderHeight = this.el.clientHeight;
@@ -86,7 +83,12 @@ var Flow = function () {
       this.imagesInit();
       this.slideMode();
 
-      this.autoPlay(this.settings.autoPlay);
+      if (this.settings.autoPlay) {
+        this.loader = document.createElement('div');
+        this.loader.classList.add('flow-loader');
+        this.el.appendChild(this.loader);
+        this.autoPlay();
+      }
       call(this.settings.events.init);
       if (plugin) {
         this.plugin = new plugin(this, this.settings);
@@ -126,8 +128,12 @@ var Flow = function () {
       if (this.nextButton) {
         this.backButton.addEventListener('click', this.slideBack.bind(this), false);
       }
-      this.el.addEventListener('mousedown', this.pointerDown.bind(this), false);
-      this.el.addEventListener('touchstart', this.pointerDown.bind(this), false);
+      this.el.addEventListener('mousedown', function (e) {
+        return _this2.pointerDown(e);
+      }, false);
+      this.el.addEventListener('touchstart', function (e) {
+        return _this2.pointerDown(e);
+      }, false);
       window.addEventListener('resize', function () {
         _this2.sliderHeight = _this2.el.clientHeight;
         _this2.sliderWidth = _this2.el.clientWidth;
@@ -196,10 +202,6 @@ var Flow = function () {
       }
 
       setTimeout(function () {
-        _this4.loader.style.transition = '';
-        _this4.loader.style.opacity = '';
-        _this4.loader.style.width = '0';
-
         _this4.activeSlide = nextSlide;
         _this4.activeIndex = slideNumber;
       }, this.settings.transitionTime);
@@ -220,9 +222,6 @@ var Flow = function () {
         nextSlide.classList.remove(fromClass);
         nextSlide.classList.add(activeClass);
         _this4.updating = false;
-        _this4.loader.style.transition = _this4.settings.transitionTime / 1000 + 's';
-        _this4.loader.style.opacity = '0';
-        _this4.loader.style.width = '100%';
       });
 
       setTimeout(function () {
@@ -235,11 +234,17 @@ var Flow = function () {
     value: function play() {
       var _this5 = this;
 
+      this.period = 16 / this.settings.playTime;
       this.playingInterval = setInterval(function () {
-        _this5.loading = _this5.loading > 1 ? 0 : _this5.loading + _this5.period;
-        _this5.loader.style.width = _this5.loading * 100 + '%';
-        if (!_this5.loading) _this5.slideNext();
-      }, 1000 / 60);
+        if (_this5.loading >= 1) {
+          _this5.slideNext();
+          _this5.loading = 0;
+        }
+        window.requestAnimationFrame(function () {
+          _this5.loading += _this5.period;
+          _this5.loader.style.transform = 'scaleX(' + _this5.loading + ')';
+        });
+      }, 16);
     }
   }, {
     key: 'pause',
@@ -248,10 +253,8 @@ var Flow = function () {
     }
   }, {
     key: 'autoPlay',
-    value: function autoPlay(value) {
-      if (!value) return;
-      this.period = 1000 / 60 / this.settings.playTime;
-      this.loading = this.period;
+    value: function autoPlay() {
+      this.loading = 0;
       this.play();
       this.el.addEventListener('mouseover', this.pause.bind(this), false);
       this.el.addEventListener('mouseout', this.play.bind(this), false);
@@ -277,7 +280,7 @@ var Flow = function () {
 
   }, {
     key: 'pointerDown',
-    value: function pointerDown() {
+    value: function pointerDown(event) {
       this.sledded = false;
       this.mouseX = event.type === 'mousedown' ? event.clientX : event.touches[0].clientX;
       this.mouseY = event.type === 'mousedown' ? event.clientY : event.touches[0].clientY;

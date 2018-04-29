@@ -13,7 +13,7 @@ export function css (element, styles) {
   });
 }
 export function sync (callback) {
-  setTimeout(() => callback(), 1000 / 60);
+  setTimeout(callback, 16);
 }
 
 export function call (func) {
