@@ -132,8 +132,12 @@
         if (this.nextButton) {
           this.backButton.addEventListener('click', this.slideBack.bind(this), false);
         }
-        this.el.addEventListener('mousedown', this.pointerDown.bind(this), false);
-        this.el.addEventListener('touchstart', this.pointerDown.bind(this), false);
+        this.el.addEventListener('mousedown', function (e) {
+          return _this2.pointerDown(e);
+        }, false);
+        this.el.addEventListener('touchstart', function (e) {
+          return _this2.pointerDown(e);
+        }, false);
         window.addEventListener('resize', function () {
           _this2.sliderHeight = _this2.el.clientHeight;
           _this2.sliderWidth = _this2.el.clientWidth;
@@ -283,7 +287,7 @@
 
     }, {
       key: 'pointerDown',
-      value: function pointerDown() {
+      value: function pointerDown(event) {
         this.sledded = false;
         this.mouseX = event.type === 'mousedown' ? event.clientX : event.touches[0].clientX;
         this.mouseY = event.type === 'mousedown' ? event.clientY : event.touches[0].clientY;

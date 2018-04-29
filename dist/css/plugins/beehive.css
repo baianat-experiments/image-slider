@@ -19,7 +19,6 @@
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
   transition: 0.5s;
-  will-change: opacity;
 }
 .beehive-cell.is-hidden {
   opacity: 0;

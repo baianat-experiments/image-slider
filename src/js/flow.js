@@ -67,8 +67,8 @@ class Flow {
     if (this.nextButton) {
       this.backButton.addEventListener('click', this.slideBack.bind(this), false);
     }
-    this.el.addEventListener('mousedown', this.pointerDown.bind(this), false);
-    this.el.addEventListener('touchstart', this.pointerDown.bind(this), false);
+    this.el.addEventListener('mousedown', (e) => this.pointerDown(e), false);
+    this.el.addEventListener('touchstart', (e) => this.pointerDown(e), false);
     window.addEventListener('resize', () => {
       this.sliderHeight = this.el.clientHeight;
       this.sliderWidth = this.el.clientWidth;
@@ -199,7 +199,7 @@ class Flow {
   }
 
   // mouse events
-  pointerDown () {
+  pointerDown (event) {
     this.sledded = false;
     this.mouseX = event.type === 'mousedown' ? event.clientX : event.touches[0].clientX;
     this.mouseY = event.type === 'mousedown' ? event.clientY : event.touches[0].clientY;
