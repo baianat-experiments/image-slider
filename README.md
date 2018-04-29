@@ -143,9 +143,9 @@ In your stylesheet file, provide the transition property values for three states
 
 ```
 
-## Enable 3D mode
+## Use plugins
 
-First, you have to include `cube3D` plugin after `Flow`
+Includes plugin file after `Flow`
 
 ```html
 
@@ -157,13 +157,13 @@ First, you have to include `cube3D` plugin after `Flow`
 
 ```
 
-then pass the cube3D plugin to `Flow` settings object
+then pass the plugin's name to `Flow` settings object with extra plugin's settings
 
 ```javaScript
 
 new Flow('#flow2', {
     autoPlay: false,
-    plugin: Cube3D,
+    plugin: Cube3D, // or Beehive
     active3D: true,
     slicesCount: 6,
     mode3D: 1
