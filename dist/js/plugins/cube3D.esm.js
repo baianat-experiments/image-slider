@@ -200,7 +200,7 @@ var Cube3D = function () {
         transform: 'translate3d(0, 0, ' + halfHeight + 'px) rotateY(0)',
         backgroundSize: currentImageHeight > this.flow.sliderHeight ? 100 * slicesCount + '% auto' : 'auto 100%'
       }, {
-        transform: 'translate3d(0 -50% 0) rotateX(90deg)',
+        transform: 'translate3d(0, -50%, 0) rotateX(90deg)',
         backgroundSize: nextImageHeight > this.flow.sliderHeight ? 100 * slicesCount + '% auto' : 'auto 100%'
       }, {
         transform: this.settings.rotateAxis === 'Y' ? 'translate3d(0, 0, -' + halfHeight + 'px) scaleX(-1)' : 'translate3d(0, 0, -' + halfHeight + 'px) rotateX(180deg)',

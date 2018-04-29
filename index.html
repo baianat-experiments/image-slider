@@ -5,6 +5,7 @@
   <title>Document</title>
   <link rel="stylesheet" href="dist/css/flow.css">
   <link rel="stylesheet" href="dist/css/plugins/cube3D.css">
+  <link rel="stylesheet" href="dist/css/plugins/beehive.css">
 </head>
 <body>
 
@@ -244,11 +245,60 @@
     </a>
   </div>
 
+
+  <div class="flow" id="beehive">
+    <div class="flow-loader"></div>
+    <div class="flow-slide is-active">
+      <img src="dist/img/image-05.jpg" alt="" class="flow-image">
+      <div class="flow-description">
+        <h3>Awesome title here</h3>
+        <p>Lorem ipsum dolor sit</p>
+      </div>
+    </div>
+    <div class="flow-slide">
+      <img src="dist/img/image-06.jpg" alt="" class="flow-image">
+      <div class="flow-description">
+        <h3>Awesome title here</h3>
+        <p>Lorem ipsum dolor sit</p>
+      </div>
+    </div>
+    <div class="flow-slide">
+      <img src="dist/img/image-07.jpg" alt="" class="flow-image">
+      <div class="flow-description">
+        <h3>Awesome title here</h3>
+        <p>Lorem ipsum dolor sit</p>
+      </div>
+    </div><div class="flow-slide">
+      <img src="dist/img/image-08.jpg" alt="" class="flow-image">
+      <div class="flow-description">
+        <h3>Awesome title here</h3>
+        <p>Lorem ipsum dolor sit</p>
+      </div>
+    </div>
+
+    <a class="flow-next">
+      <svg width="50" height="50" viewBox="0 0 24 24">
+        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+      </svg>
+    </a>
+
+    <a class="flow-back">
+      <svg width="50" height="50" viewBox="0 0 24 24">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+      </svg>
+    </a>
+  </div>
+
   <script type="text/javascript" src="dist/js/flow.js"></script>
   <script type="text/javascript" src="dist/js/plugins/cube3D.js"></script>
+  <script type="text/javascript" src="dist/js/plugins/beehive.js"></script>
 
 
   <script type="text/javascript">
+    new Flow('#beehive', {
+      autoPlay: false,
+      plugin: Beehive,
+    });
 
     new Flow('#flow1', {
       autoPlay: false,

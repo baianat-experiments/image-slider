@@ -1,0 +1,26 @@
+.beehive {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+.beehive.is-active {
+  display: block;
+}
+.beehive-cell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-size: cover;
+  background-position: center center;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  -webkit-transition: 0.5s;
+  -o-transition: 0.5s;
+  transition: 0.5s;
+  will-change: opacity;
+}
+.beehive-cell.is-hidden {
+  opacity: 0;
+}
