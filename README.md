@@ -47,8 +47,6 @@ For easy customization, you have to add any element you want in Flow
 ``` html
 <!-- create div with class flow -->
 <div class="flow" id="flow1">
-  <!-- flow loader -->
-  <div class="flow-loader"></div>
     <!-- add div with flow-slider class for each image -->
     <div class="flow-slide is-active">
       <!-- flow content -->
