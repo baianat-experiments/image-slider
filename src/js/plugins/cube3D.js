@@ -1,4 +1,4 @@
-import { css, sync, getRandomInt } from '../utils';
+import { css, async, getRandomInt } from '../utils';
 
 export default class Cube3D {
   constructor (flow, settings) {
@@ -17,6 +17,7 @@ export default class Cube3D {
     );
     this.fragment.appendChild(cubeContainer);
     this.flow.el.appendChild(this.fragment);
+    this.cubes = Array.from(this.flow.el.querySelectorAll('.cube'));
     this.initMode(this.settings.mode3D);
     this.flow.slides.forEach((slide) => {
       slide.style.backgroundPosition = this.settings.isVertical ? 'left center' : 'center top';
@@ -63,19 +64,20 @@ export default class Cube3D {
 
   updateSlide (slideNumber) {
     // give cubes style
-    const cubes = this.styleCubes(
+    this.styleCubes(
       this.flow.imagesSrc[this.flow.activeIndex],
       this.flow.imagesSrc[slideNumber]
     );
-
-    // start animation
+    const activeSlide = this.flow.slides[this.flow.activeIndex];
+    const lastCube = this.cubes[this.cubes.length - 1];
     const animation = this.flow.el.querySelector('.animation-3d');
+
     animation.style.display = 'block';
     this.flow.el.style.overflow = 'visible';
-    this.flow.activeSlide.classList.remove('is-active');
-    this.flow.activeSlide.style.display = 'none';
-    sync(() => {
-      cubes.forEach((cube, index) => {
+    activeSlide.classList.remove('is-active');
+    activeSlide.style.display = 'none';
+    async(() => {
+      this.cubes.forEach((cube, index) => {
         setTimeout(() => {
           cube.style.transform = this.getCubesModeTransform();
         }, (index + 1) * 100);
@@ -83,14 +85,16 @@ export default class Cube3D {
     });
 
     // reset animation
-    setTimeout(() => {
+    const transitionEndCallback = () => {
       animation.style.display = 'none';
       this.flow.el.style.overflow = 'hidden';
       this.flow.slides[slideNumber].style.display = 'block';
       this.flow.slides[slideNumber].classList.add('is-active');
-      this.flow.activeSlide = this.flow.slides[slideNumber];
       this.flow.updating = false;
-    }, (this.settings.slicesCount * 100) + 600);
+      this.flow.activeIndex = slideNumber;
+      lastCube.removeEventListener('transitionend', transitionEndCallback);
+    };
+    lastCube.addEventListener('transitionend', transitionEndCallback);
   }
 
   getCubesModeTransform () {
@@ -128,7 +132,6 @@ export default class Cube3D {
 
   styleCubes (current, next) {
     const midd = Math.ceil(this.settings.slicesCount / 2);
-    const cubes = Array.from(this.flow.el.querySelectorAll('.cube'));
     const height = this.flow.sliderHeight;
     const width = this.flow.sliderWidth;
     const slicesCount = this.settings.slicesCount;
@@ -192,7 +195,7 @@ export default class Cube3D {
     facesStyle = this.setImagesSrc(facesStyle, current, next);
 
     // each cube style
-    cubes.forEach((cube, index) => {
+    this.cubes.forEach((cube, index) => {
       const styles = this.settings.isVertical ? {
         top: 0,
         left: `${(100 / slicesCount) * index}%`,
@@ -215,6 +218,5 @@ export default class Cube3D {
         css(face, facesStyle[index]);
       });
     });
-    return cubes;
   }
 }

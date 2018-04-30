@@ -6,7 +6,7 @@
 /**
  * Utilities
  */
-function sync(callback) {
+function async(callback) {
   setTimeout(callback, 16);
 }
 
@@ -74,25 +74,28 @@ var Beehive = function () {
     value: function updateSlide(slideNumber) {
       var _this = this;
 
-      this.flow.activeSlide.classList.remove('is-active');
-      this.flow.slides[slideNumber].classList.add('is-active');
+      var lastCell = this.cells[this.cells.length - 1];
+      var activeSlide = this.flow.slides[this.flow.activeIndex];
+      var nextSlide = this.flow.slides[slideNumber];
+
       this.beehive.classList.add('is-active');
       this.flow.el.style.overflow = 'visible';
+      activeSlide.classList.remove('is-active');
+      nextSlide.classList.add('is-active');
 
-      var lastCell = this.cells[this.cells.length - 1];
+      var transitionEndCallback = function transitionEndCallback() {
+        _this.flow.activeIndex = slideNumber;
+        _this.flow.updating = false;
+        _this.flow.el.style.overflow = '';
+        _this.beehive.classList.remove('is-active');
+        _this.updateBackground();
+        lastCell.removeEventListener('transitionend', transitionEndCallback);
+      };
 
-      sync(function () {
+      async(function () {
         _this.cells.forEach(function (cell) {
           cell.classList.add('is-hidden');
         });
-        var transitionEndCallback = function transitionEndCallback() {
-          _this.flow.activeSlide = _this.flow.slides[slideNumber];
-          _this.flow.updating = false;
-          _this.flow.el.style.overflow = '';
-          _this.beehive.classList.remove('is-active');
-          _this.updateBackground();
-          lastCell.removeEventListener('transitionend', transitionEndCallback);
-        };
         lastCell.addEventListener('transitionend', transitionEndCallback);
       });
     }
@@ -113,7 +116,7 @@ var Beehive = function () {
 }();
 
 Beehive.defaults = {
-  radius: 200
+  radius: 250
 };
 
 export default Beehive;

@@ -18,7 +18,7 @@
     }
     return element;
   }
-  function sync(callback) {
+  function async(callback) {
     setTimeout(callback, 16);
   }
 
@@ -72,8 +72,7 @@
         var plugin = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         this.slides = Array.from(this.el.querySelectorAll('.flow-slide'));
-        this.activeSlide = this.el.querySelector('.flow-slide.is-active');
-        this.activeIndex = this.slides.indexOf(this.activeSlide);
+        this.activeIndex = this.slides.indexOf(this.el.querySelector('.flow-slide.is-active'));
         this.nextButton = this.el.querySelector('.flow-next');
         this.backButton = this.el.querySelector('.flow-back');
         this.sliderHeight = this.el.clientHeight;
@@ -185,33 +184,12 @@
       value: function updateSlide(slideNumber, forwards) {
         var _this4 = this;
 
-        if (this.updating || slideNumber > this.slidesCount) {
+        if (this.updating || slideNumber > this.slidesCount || slideNumber === this.activeIndex) {
           return;
         }
-        if (this.loading) {
-          this.loading = 0;
-        }
-        if (forwards === undefined) {
-          forwards = slideNumber > this.slides.indexOf(this.activeSlide);
-        }
+        forwards = forwards || slideNumber > this.activeIndex;
         this.updating = true;
-
-        var activeSlide = this.activeSlide;
-        var nextSlide = this.slides[slideNumber];
-        var fromClass = forwards ? 'is-entering' : 'is-leaving';
-        var toClass = forwards ? 'is-leaving' : 'is-entering';
-        var activeClass = 'is-active';
-
-        if (this.indicators) {
-          this.indicators[this.activeIndex].classList.remove(activeClass);
-          this.indicators[slideNumber].classList.add(activeClass);
-        }
-
-        setTimeout(function () {
-          _this4.activeSlide = nextSlide;
-          _this4.activeIndex = slideNumber;
-        }, this.settings.transitionTime);
-
+        this.updateIndicators(slideNumber);
         call(this.settings.events.updating);
 
         // if using a plugin
@@ -220,10 +198,20 @@
           return;
         }
 
+        var activeSlide = this.slides[this.activeIndex];
+        var nextSlide = this.slides[slideNumber];
+        var fromClass = forwards ? 'is-entering' : 'is-leaving';
+        var toClass = forwards ? 'is-leaving' : 'is-entering';
+        var activeClass = 'is-active';
+
+        setTimeout(function () {
+          _this4.activeIndex = slideNumber;
+        }, this.settings.transitionTime);
+
         activeSlide.classList.add(toClass);
         nextSlide.classList.add(fromClass);
 
-        sync(function () {
+        async(function () {
           activeSlide.classList.remove(activeClass);
           nextSlide.classList.remove(fromClass);
           nextSlide.classList.add(activeClass);
@@ -236,6 +224,16 @@
         }, this.settings.transitionTime);
       }
     }, {
+      key: 'updateIndicators',
+      value: function updateIndicators(slideNumber) {
+        if (!this.indicators) {
+          return;
+        }
+        var activeClass = 'is-active';
+        this.indicators[this.activeIndex].classList.remove(activeClass);
+        this.indicators[slideNumber].classList.add(activeClass);
+      }
+    }, {
       key: 'play',
       value: function play() {
         var _this5 = this;
@@ -243,8 +241,9 @@
         this.period = 16 / this.settings.playTime;
         this.playingInterval = setInterval(function () {
           if (_this5.loading >= 1) {
-            _this5.slideNext();
             _this5.loading = 0;
+            _this5.loader.style.transform = 'scaleX(0)';
+            _this5.slideNext();
           }
           window.requestAnimationFrame(function () {
             _this5.loading += _this5.period;

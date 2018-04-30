@@ -11,7 +11,7 @@ function css(element, styles) {
     element.style[key] = styles[key];
   });
 }
-function sync(callback) {
+function async(callback) {
   setTimeout(callback, 16);
 }
 
@@ -62,6 +62,7 @@ var Cube3D = function () {
       cubeContainer.insertAdjacentHTML('afterbegin', ('<div class="cube">\n       ' + '<div class="cube-face"></div>'.repeat(6) + '\n     </div>').repeat(this.settings.slicesCount));
       this.fragment.appendChild(cubeContainer);
       this.flow.el.appendChild(this.fragment);
+      this.cubes = Array.from(this.flow.el.querySelectorAll('.cube'));
       this.initMode(this.settings.mode3D);
       this.flow.slides.forEach(function (slide) {
         slide.style.backgroundPosition = _this.settings.isVertical ? 'left center' : 'center top';
@@ -112,16 +113,17 @@ var Cube3D = function () {
       var _this2 = this;
 
       // give cubes style
-      var cubes = this.styleCubes(this.flow.imagesSrc[this.flow.activeIndex], this.flow.imagesSrc[slideNumber]);
-
-      // start animation
+      this.styleCubes(this.flow.imagesSrc[this.flow.activeIndex], this.flow.imagesSrc[slideNumber]);
+      var activeSlide = this.flow.slides[this.flow.activeIndex];
+      var lastCube = this.cubes[this.cubes.length - 1];
       var animation = this.flow.el.querySelector('.animation-3d');
+
       animation.style.display = 'block';
       this.flow.el.style.overflow = 'visible';
-      this.flow.activeSlide.classList.remove('is-active');
-      this.flow.activeSlide.style.display = 'none';
-      sync(function () {
-        cubes.forEach(function (cube, index) {
+      activeSlide.classList.remove('is-active');
+      activeSlide.style.display = 'none';
+      async(function () {
+        _this2.cubes.forEach(function (cube, index) {
           setTimeout(function () {
             cube.style.transform = _this2.getCubesModeTransform();
           }, (index + 1) * 100);
@@ -129,14 +131,16 @@ var Cube3D = function () {
       });
 
       // reset animation
-      setTimeout(function () {
+      var transitionEndCallback = function transitionEndCallback() {
         animation.style.display = 'none';
         _this2.flow.el.style.overflow = 'hidden';
         _this2.flow.slides[slideNumber].style.display = 'block';
         _this2.flow.slides[slideNumber].classList.add('is-active');
-        _this2.flow.activeSlide = _this2.flow.slides[slideNumber];
         _this2.flow.updating = false;
-      }, this.settings.slicesCount * 100 + 600);
+        _this2.flow.activeIndex = slideNumber;
+        lastCube.removeEventListener('transitionend', transitionEndCallback);
+      };
+      lastCube.addEventListener('transitionend', transitionEndCallback);
     }
   }, {
     key: 'getCubesModeTransform',
@@ -177,7 +181,6 @@ var Cube3D = function () {
       var _this3 = this;
 
       var midd = Math.ceil(this.settings.slicesCount / 2);
-      var cubes = Array.from(this.flow.el.querySelectorAll('.cube'));
       var height = this.flow.sliderHeight;
       var width = this.flow.sliderWidth;
       var slicesCount = this.settings.slicesCount;
@@ -237,7 +240,7 @@ var Cube3D = function () {
       facesStyle = this.setImagesSrc(facesStyle, current, next);
 
       // each cube style
-      cubes.forEach(function (cube, index) {
+      this.cubes.forEach(function (cube, index) {
         var styles = _this3.settings.isVertical ? {
           top: 0,
           left: 100 / slicesCount * index + '%',
@@ -260,7 +263,6 @@ var Cube3D = function () {
           css(face, facesStyle[index]);
         });
       });
-      return cubes;
     }
   }]);
   return Cube3D;

@@ -1,4 +1,4 @@
-import { sync } from '../utils';
+import { async } from '../utils';
 
 export default class Beehive {
   constructor (flow, settings) {
@@ -45,25 +45,28 @@ export default class Beehive {
   }
 
   updateSlide (slideNumber) {
-    this.flow.activeSlide.classList.remove('is-active');
-    this.flow.slides[slideNumber].classList.add('is-active');
+    const lastCell = this.cells[this.cells.length - 1];
+    const activeSlide = this.flow.slides[this.flow.activeIndex];
+    const nextSlide = this.flow.slides[slideNumber];
+
     this.beehive.classList.add('is-active');
     this.flow.el.style.overflow = 'visible';
-  
-    const lastCell = this.cells[this.cells.length - 1];
-    
-    sync(() => {
+    activeSlide.classList.remove('is-active');
+    nextSlide .classList.add('is-active');
+
+    const transitionEndCallback = () => {
+      this.flow.activeIndex = slideNumber;
+      this.flow.updating = false;
+      this.flow.el.style.overflow = '';
+      this.beehive.classList.remove('is-active');
+      this.updateBackground();
+      lastCell.removeEventListener('transitionend', transitionEndCallback);
+    };
+
+    async(() => {
       this.cells.forEach(cell => {
         cell.classList.add('is-hidden');
       });
-      const transitionEndCallback = () => {
-        this.flow.activeSlide = this.flow.slides[slideNumber];
-        this.flow.updating = false;
-        this.flow.el.style.overflow = '';
-        this.beehive.classList.remove('is-active');
-        this.updateBackground();
-        lastCell.removeEventListener('transitionend', transitionEndCallback);
-      };
       lastCell.addEventListener('transitionend', transitionEndCallback);
     });
   }
@@ -78,6 +81,6 @@ export default class Beehive {
 
   // eslint-disable-next-line
   static defaults = {
-    radius: 200
+    radius: 250
   }
 }

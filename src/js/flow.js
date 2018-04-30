@@ -1,4 +1,4 @@
-import { select, sync, call, callable } from './utils';
+import { select, async, call, callable } from './utils';
 
 class Flow {
   constructor (selector, settings) {
@@ -17,8 +17,7 @@ class Flow {
 
   init (plugin = null) {
     this.slides = Array.from(this.el.querySelectorAll('.flow-slide'));
-    this.activeSlide = this.el.querySelector('.flow-slide.is-active');
-    this.activeIndex = this.slides.indexOf(this.activeSlide);
+    this.activeIndex = this.slides.indexOf(this.el.querySelector('.flow-slide.is-active'));
     this.nextButton = this.el.querySelector('.flow-next');
     this.backButton = this.el.querySelector('.flow-back');
     this.sliderHeight = this.el.clientHeight;
@@ -110,33 +109,16 @@ class Flow {
   }
 
   updateSlide (slideNumber, forwards) {
-    if (this.updating || slideNumber > this.slidesCount) {
+    if (
+      this.updating ||
+      slideNumber > this.slidesCount ||
+      slideNumber === this.activeIndex
+    ) {
       return;
     }
-    if (this.loading) {
-      this.loading = 0;
-    }
-    if (forwards === undefined) {
-      forwards = slideNumber > this.slides.indexOf(this.activeSlide);
-    }
+    forwards = forwards || slideNumber > this.activeIndex;
     this.updating = true;
-
-    const activeSlide = this.activeSlide;
-    const nextSlide = this.slides[slideNumber];
-    const fromClass = forwards ? 'is-entering' : 'is-leaving';
-    const toClass = forwards ? 'is-leaving' : 'is-entering';
-    const activeClass = 'is-active';
-
-    if (this.indicators) {
-      this.indicators[this.activeIndex].classList.remove(activeClass);
-      this.indicators[slideNumber].classList.add(activeClass);
-    }
-
-    setTimeout(() => {
-      this.activeSlide = nextSlide;
-      this.activeIndex = slideNumber;
-    }, this.settings.transitionTime);
-
+    this.updateIndicators(slideNumber);
     call(this.settings.events.updating);
 
     // if using a plugin
@@ -145,10 +127,20 @@ class Flow {
       return;
     }
 
+    const activeSlide = this.slides[this.activeIndex];
+    const nextSlide = this.slides[slideNumber];
+    const fromClass = forwards ? 'is-entering' : 'is-leaving';
+    const toClass = forwards ? 'is-leaving' : 'is-entering';
+    const activeClass = 'is-active';
+
+    setTimeout(() => {
+      this.activeIndex = slideNumber;
+    }, this.settings.transitionTime);
+
     activeSlide.classList.add(toClass);
     nextSlide.classList.add(fromClass);
 
-    sync(() => {
+    async(() => {
       activeSlide.classList.remove(activeClass);
       nextSlide.classList.remove(fromClass);
       nextSlide.classList.add(activeClass);
@@ -161,12 +153,22 @@ class Flow {
     }, this.settings.transitionTime);
   }
 
+  updateIndicators(slideNumber) {
+    if (!this.indicators) {
+      return;
+    }
+    const activeClass = 'is-active';
+    this.indicators[this.activeIndex].classList.remove(activeClass);
+    this.indicators[slideNumber].classList.add(activeClass);
+  }
+
   play () {
     this.period = 16 / this.settings.playTime;
     this.playingInterval = setInterval(() => {
       if (this.loading >= 1) {
-        this.slideNext();
         this.loading = 0;
+        this.loader.style.transform = 'scaleX(0)';
+        this.slideNext();
       }
       window.requestAnimationFrame(() => {
         this.loading += this.period;

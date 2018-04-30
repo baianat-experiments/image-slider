@@ -12,7 +12,7 @@ export function css (element, styles) {
     element.style[key] = styles[key];
   });
 }
-export function sync (callback) {
+export function async (callback) {
   setTimeout(callback, 16);
 }
 
