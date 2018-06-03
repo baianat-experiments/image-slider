@@ -85,15 +85,29 @@
         var nextSlide = this.flow.slides[slideNumber];
 
         this.beehive.classList.add('is-active');
+        var enterClass = 'is-entering';
+        var leaveClass = 'is-leaving';
+        var activeClass = 'is-active';
+
+        activeSlide.classList.add(leaveClass);
+        nextSlide.classList.add(enterClass);
+
+        async(function () {
+          activeSlide.classList.remove(activeClass);
+          nextSlide.classList.remove(enterClass);
+          nextSlide.classList.add(activeClass);
+        });
+
         this.flow.el.style.overflow = 'visible';
-        activeSlide.classList.remove('is-active');
-        nextSlide.classList.add('is-active');
 
         var transitionEndCallback = function transitionEndCallback() {
           _this.flow.activeIndex = slideNumber;
           _this.flow.updating = false;
           _this.flow.el.style.overflow = '';
+
           _this.beehive.classList.remove('is-active');
+          activeSlide.classList.remove(leaveClass);
+
           _this.updateBackground();
           lastCell.removeEventListener('transitionend', transitionEndCallback);
         };
@@ -108,6 +122,7 @@
     }, {
       key: 'updateBackground',
       value: function updateBackground() {
+        console.log(this.flow.activeIndex);
         var currentImage = this.flow.imagesSrc[this.flow.activeIndex];
         this.cells.forEach(function (cell) {
           cell.style.backgroundImage = 'url(' + currentImage + ')';

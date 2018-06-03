@@ -20,3 +20,20 @@
       opacity: 0
       transform-origin: center center
       transform: rotateY(-20deg) translate3d(-10px, -15px, 0)
+
+
+
+.flow-beehive.is-entering
+  .flow-description
+    opacity: 0
+    transform: translate3d(-50%, -250%, 0)
+
+.flow-beehive.is-leaving
+  display: none
+  .flow-description
+    transform: translate3d(-50%, 150%, 0)
+
+.flow-beehive.is-active .flow-description
+  opacity: 1
+  transform: translate3d(-50%, -50%, 0)
+

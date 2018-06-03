@@ -50,15 +50,30 @@ export default class Beehive {
     const nextSlide = this.flow.slides[slideNumber];
 
     this.beehive.classList.add('is-active');
+    const enterClass = 'is-entering';
+    const leaveClass = 'is-leaving';
+    const activeClass = 'is-active';
+
+    activeSlide.classList.add(leaveClass);
+    nextSlide.classList.add(enterClass);
+
+    async(() => {
+      activeSlide.classList.remove(activeClass);
+      nextSlide.classList.remove(enterClass);
+      nextSlide.classList.add(activeClass);
+    });
+
+
     this.flow.el.style.overflow = 'visible';
-    activeSlide.classList.remove('is-active');
-    nextSlide .classList.add('is-active');
 
     const transitionEndCallback = () => {
       this.flow.activeIndex = slideNumber;
       this.flow.updating = false;
       this.flow.el.style.overflow = '';
+
       this.beehive.classList.remove('is-active');
+      activeSlide.classList.remove(leaveClass);
+
       this.updateBackground();
       lastCell.removeEventListener('transitionend', transitionEndCallback);
     };
@@ -72,6 +87,7 @@ export default class Beehive {
   }
 
   updateBackground () {
+    console.log(this.flow.activeIndex);
     const currentImage = this.flow.imagesSrc[this.flow.activeIndex];
     this.cells.forEach(cell => {
       cell.style.backgroundImage = `url(${currentImage})`;

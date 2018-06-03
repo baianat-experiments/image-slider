@@ -78,16 +78,24 @@ var Beehive = function () {
       var activeSlide = this.flow.slides[this.flow.activeIndex];
       var nextSlide = this.flow.slides[slideNumber];
 
-      this.beehive.classList.add('is-active');
+      var enterClass = 'is-entering';
+      var leaveClass = 'is-leaving';
+      var activeClass = 'is-active';
+
+      activeSlide.classList.add(leaveClass);
+      activeSlide.classList.remove(activeClass);
+      nextSlide.classList.add(enterClass);
+
       this.flow.el.style.overflow = 'visible';
-      activeSlide.classList.remove('is-active');
-      nextSlide.classList.add('is-active');
 
       var transitionEndCallback = function transitionEndCallback() {
         _this.flow.activeIndex = slideNumber;
         _this.flow.updating = false;
         _this.flow.el.style.overflow = '';
-        _this.beehive.classList.remove('is-active');
+        activeSlide.classList.remove(leaveClass);
+        nextSlide.classList.leave(enterClass);
+        nextSlide.classList.add(activeClass);
+
         _this.updateBackground();
         lastCell.removeEventListener('transitionend', transitionEndCallback);
       };
