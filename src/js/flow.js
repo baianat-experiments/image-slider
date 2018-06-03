@@ -57,6 +57,7 @@ class Flow {
       indicator.classList.add('flow-dot');
       indicator.classList.toggle('is-active', index === this.activeIndex);
       indicator.addEventListener('click', () => this.updateSlide(index));
+      indicator.addEventListener('touchstart', () => this.updateSlide(index));
       listItem.appendChild(indicator);
       indicatorsList.appendChild(listItem);
     })
@@ -66,9 +67,11 @@ class Flow {
   eventsInit () {
     if (this.nextButton) {
       this.nextButton.addEventListener('click', this.slideNext.bind(this), false);
+      this.nextButton.addEventListener('touchstart', this.slideNext.bind(this), false);
     }
     if (this.nextButton) {
       this.backButton.addEventListener('click', this.slideBack.bind(this), false);
+      this.backButton.addEventListener('touchstart', this.slideBack.bind(this), false);
     }
     this.el.addEventListener('mousedown', (e) => this.pointerDown(e), false);
     this.el.addEventListener('touchstart', (e) => this.pointerDown(e), false);

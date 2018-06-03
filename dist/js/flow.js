@@ -117,6 +117,9 @@
           indicator.addEventListener('click', function () {
             return _this.updateSlide(index);
           });
+          indicator.addEventListener('touchstart', function () {
+            return _this.updateSlide(index);
+          });
           listItem.appendChild(indicator);
           indicatorsList.appendChild(listItem);
         });
@@ -129,9 +132,11 @@
 
         if (this.nextButton) {
           this.nextButton.addEventListener('click', this.slideNext.bind(this), false);
+          this.nextButton.addEventListener('touchstart', this.slideNext.bind(this), false);
         }
         if (this.nextButton) {
           this.backButton.addEventListener('click', this.slideBack.bind(this), false);
+          this.backButton.addEventListener('touchstart', this.slideBack.bind(this), false);
         }
         this.el.addEventListener('mousedown', function (e) {
           return _this2.pointerDown(e);
